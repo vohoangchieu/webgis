@@ -1,0 +1,6 @@
+<select id="district" class="form-control">
+    <option value="g2999">Tên trạm</option>
+    <option value="g2999">Trạm 1</option>
+    <option value="g2999">Trạm 2</option>
+    <option value="g2999">Trạm 3</option>
+</select>

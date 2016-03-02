@@ -5,22 +5,27 @@
  */
 package web.gis;
 
-import java.io.FileInputStream;
+import hapax.Template;
+import hapax.TemplateDataDictionary;
+import hapax.TemplateDictionary;
+import hapax.TemplateException;
+import hapax.TemplateLoader;
+import hapax.TemplateResourceLoader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.util.Enumeration;
-import java.util.Properties;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author chieuvh
  */
 public class IndexServlet extends HttpServlet {
+
+    private static final Logger logger = Logger.getLogger(IndexServlet.class);
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,21 +39,19 @@ public class IndexServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
 
-       
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet IndexServlet</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet IndexServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        TemplateDataDictionary tmpDataDic = TemplateDictionary.create();
+        TemplateLoader templateLoader = TemplateResourceLoader.create("views/", false);
+        Template template;
+        try {
+            template = templateLoader.getTemplate("index");
+            String data = template.renderToString(tmpDataDic);
+            response.getWriter().print(data);
+            response.getWriter().close();
+        } catch (TemplateException ex) {
+            logger.error(ex.getMessage(), ex);
         }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
