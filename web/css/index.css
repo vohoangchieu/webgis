@@ -1,0 +1,7 @@
+body{
+    width: 980px;
+    margin: auto;
+}
+.nav-tabs li{
+    padding: 5px;
+}
