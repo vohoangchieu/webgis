@@ -1,6 +1,118 @@
-<select id="district" class="form-control">
-    <option value="g2999">Tên trạm</option>
-    <option value="g2999">Trạm 1</option>
-    <option value="g2999">Trạm 2</option>
-    <option value="g2999">Trạm 3</option>
-</select>
+<!DOCTYPE html>
+<html lang="en"><head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Gis</title>
+
+        <!-- Bootstrap -->
+        <link href="{{contextPath}}/css/bootstrap.min.css" rel="stylesheet">
+        <link href="{{contextPath}}/css/index.css" rel="stylesheet">
+        <link href="{{contextPath}}/css/jquery-ui.min.css" rel="stylesheet">
+        <link href="{{contextPath}}/css/select2.min.css" rel="stylesheet">
+        <!--<script src="http://maps.googleapis.com/maps/api/js"></script>-->
+    </head>
+    <body>
+        <script> var contextPath='{{contextPath}}';</script>
+        <div class="container" style="width: 980px;margin: auto;padding: 0;height: 100%">
+            <div class="row" style="height: 125px;text-align: center;border: 1px solid #dfdfdf;">
+                <img src="{{contextPath}}/img/banner.jpg" height="125" width="980px">
+            </div>
+            <div class="row" style=";border: 1px solid #dfdfdf;border-bottom: none">
+                <ul class="nav nav-tabs">
+                    <style>
+                        .glyphicon{
+                            color: #31708f;
+                            font-size: 20px;
+                            margin-right: 8px;
+                        }
+                    </style>
+                    <li role="presentation"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true" ></span></li>
+                    <li role="presentation"><span class="glyphicon glyphicon-zoom-out" aria-hidden="true" ></span></li>
+                    <li role="presentation"><span class="glyphicon glyphicon-info-sign" aria-hidden="true" ></span></li>
+                    <li role="presentation"><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span></li>
+                    <li role="presentation"><span class="glyphicon glyphicon-hand-up" aria-hidden="true"></span></li>
+                    <!--                    <li role="presentation" class="active"><a href="#">Trang chu</a></li>
+                                        <li role="presentation"><a href="#">Profile</a></li>
+                                        <li role="presentation"><a href="#">Messages</a></li>-->
+                </ul>
+            </div>
+            <div class="row" style="border: 1px solid #dfdfdf;border-top: none">
+
+                <div class="row" style=";height: auto;">
+                    <div id=left-panel" class="col-md-3" style="border: 1px solid #dfdfdf;height: 100%">
+
+                        <div class="panel panel-info" style="margin-top: 5px">
+                            <div class="panel-heading">Tìm kiếm BTS</div>
+                            <div class="panel-body">
+                                <form class="form-horizontal" style="margin: auto;margin-top: 5px">
+                                    <div class="form-group" style="width: 90%;margin-left: auto;margin-right: auto">
+                                        <!--<label class="sr-only" for="kihieutram">Kí hiệu trạm</label>-->
+                                        <input id="kihieutram" type="text" class="form-control" placeholder="Kí hiệu trạm">
+                                    </div>
+                                    <div class="form-group" style="width: 90%;margin-left: auto;margin-right: auto">
+                                        <!--<label class="sr-only" for="district">Tên trạm</label>-->
+                                        <input id="tentram" type="text" class="form-control" placeholder="Tên trạm">
+                                    </div>
+                                    
+                                    <div class="form-group" style="width: 90%;margin-left: auto;margin-right: auto">
+                                        <label class="sr-only" for="district">Tọa độ (x,y)</label>
+                                        <input id="toadoxy" type="text" class="form-control" placeholder="Tọa độ (x,y)">
+                                    </div>
+                                    <div class="form-group" style="width: 90%;margin-left: auto;margin-right: auto">
+                                        <input class="btn btn-info" type="submit" value="Tìm kiếm">
+                                    </div>
+
+                                </form>
+                            </div>
+                        </div>
+                        <div class="panel panel-info">
+                            <div class="panel-heading">Kết quả tìm kiếm BTS</div>
+                            <div class="panel-body" style="width:100%;overflow-x: scroll">
+                                <table class="table table-bordered" > 
+                                    <thead> 
+                                        <tr> <th>#</th> 
+                                            <th>Tên trạm</th><th>NgayLapDat</th><th>DiaChiLapDat</th><th>TinhThanhLD</th><th>x</th> <th>y</th> </tr>
+                                    </thead> 
+                                    <tbody> 
+                                        <tr> <th scope="row">1</th> <td>Mark</td> <td>Ngay Lap Dat 1</td><td>Dia Chi Lap Dat 1</td><td>Tinh Thanh LD 1</td><td>x1</td> <td>y1</td> </tr> 
+                                        <tr> <th scope="row">2</th> <td>Jacob</td> <td>Ngay Lap Dat 2</td><td>Dia Chi Lap Dat 2</td><td>Tinh Thanh LD 2</td><td>x2</td> <td>y2</td> </tr> 
+                                        <!--<tr> <th scope="row">3</th> <td>Larry</td> <td>Ngay Lap Dat 3</td><td>Dia Chi Lap Dat 3</td><td>Tinh Thanh LD 3</td><td>x3</td> <td>y3</td> </tr>--> 
+                                    </tbody> 
+                                </table>
+                            </div>
+                        </div>
+                        <div class="panel panel-info">
+                            <!--<div class="panel-heading">Chú thích</div>-->
+                            <div class="panel-body" >
+                                <div style="margin: auto;width: 64px"><img src="{{contextPath}}/img/green.ico"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="googleMap" class="col-md-9" style="border: 1px solid #dfdfdf;height: 600px">
+                        <!--<div  style="width: 100%;height: 100%"></div>-->
+                    </div>
+
+                </div>
+
+                <!--                <div class="row" style=";border: 1px solid #dfdfdf;;text-align: center;">
+                                    Copyright@2016
+                                </div>-->
+                <script type="text/javascript" 
+                src="http://maps.googleapis.com/maps/api/js?"></script>
+                <script>
+                </script>
+                <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+                <script src="{{contextPath}}/js/jquery.min.js"></script>
+                <script src="{{contextPath}}/js/jquery-ui.min.js"></script>
+                <script src="{{contextPath}}/js/jquery.textcomplete.min.js"></script>
+                <script src="{{contextPath}}/js/jquery.overlay.js"></script>
+                <!-- Include all compiled plugins (below), or include individual files as needed -->
+                <script src="{{contextPath}}/js/bootstrap.min.js"></script>
+                <script src="{{contextPath}}/js/select2.min.js"></script>
+                <script src="{{contextPath}}/js/common.js"></script>
+                <script src="{{contextPath}}/js/index.js"></script>
+            </div>
+    </body>
+</html>

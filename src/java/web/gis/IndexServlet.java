@@ -12,12 +12,14 @@ import hapax.TemplateException;
 import hapax.TemplateLoader;
 import hapax.TemplateResourceLoader;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
+import web.gis.config.AppConfig;
 
 /**
  *
@@ -38,20 +40,39 @@ public class IndexServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-
-        TemplateDataDictionary tmpDataDic = TemplateDictionary.create();
-        TemplateLoader templateLoader = TemplateResourceLoader.create("views/", false);
-        Template template;
+        TemplateDataDictionary dic = TemplateDictionary.create();
+        dic.setVariable("contextPath", AppConfig.contextPath);
+        
         try {
-            template = templateLoader.getTemplate("index");
-            String data = template.renderToString(tmpDataDic);
-            response.getWriter().print(data);
-            response.getWriter().close();
+            Template template = getCTemplate("index");
+            String data = template.renderToString(dic);
+            outContent(data, response);
         } catch (TemplateException ex) {
             logger.error(ex.getMessage(), ex);
         }
 
+    }
+    protected Template getCTemplate(String tpl) throws TemplateException {
+        TemplateLoader templateLoader = TemplateResourceLoader.create("views/");
+        Template template = templateLoader.getTemplate(tpl);
+        return template;
+    }
+    
+    protected void outContent(String content, HttpServletResponse response) {
+
+        PrintWriter out = null;
+        try {
+            response.setContentType("text/html;charset=UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            out = response.getWriter();
+            out.print(content);
+        } catch (Exception ex) {
+            logger.error(ex.getMessage(), ex);
+        } finally {
+            if (out != null) {
+                out.close();
+            }
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
