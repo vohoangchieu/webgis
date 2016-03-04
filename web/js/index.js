@@ -23,7 +23,7 @@ document.onready = function () {
         map: map,
         position: location,
         title: title,
-        icon: contextPath + '/img/map-marker-orange.png'
+        icon: contextPath + '/img/green.ico'
     });
     var content = "<div style=\"width:350px;overflow-x:scroll\"><table class=\"table table-bordered\" > " +
             " <thead>  " +

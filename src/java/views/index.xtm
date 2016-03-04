@@ -84,9 +84,16 @@
                             </div>
                         </div>
                         <div class="panel panel-info">
-                            <!--<div class="panel-heading">Chú thích</div>-->
+                            <div class="panel-heading">Chú thích</div>
                             <div class="panel-body" >
-                                <div style="margin: auto;width: 64px"><img src="{{contextPath}}/img/green.ico"></div>
+                                <table class="table table-bordered" > 
+                                    
+                                    <tbody> 
+                                        <tr> <td style="width: 30%"><img src="{{contextPath}}/img/green.ico" style="width: 48px;margin: auto"></td> <td style="width: 30%;margin: auto"><img src="{{contextPath}}/img/red.ico" style="width: 48px;margin: auto"></td><td style="width: 30%"><img src="{{contextPath}}/img/orange.ico" style="width: 48px"></td></tr> 
+                                        <tr> <td>Da quy hoach</td> <td>Dang quy hoach</td><td>Dang xem</td></tr> 
+                                    </tbody> 
+                                </table>
+                                <!--<div style="margin: auto;width: 64px"><img src="{{contextPath}}/img/green.ico"></div>-->
                             </div>
                         </div>
                     </div>
