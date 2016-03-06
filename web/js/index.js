@@ -1,17 +1,14 @@
+var markers = {};
+var markerArray = [];
+var infoWindows = {};
+var contents = {};
+var globalInfoWindow = null;
+var map;
 $(function () {
     $('select').select2();
 })
 document.onready = function () {
-//    return;
-//    $("#googleMap").height($("#left-panel").height());
-    var iconshop = new google.maps.MarkerImage("/static/image/website/shop.jpg",
-            new google.maps.Size(250, 90),
-            new google.maps.Point(0, 0),
-            new google.maps.Point(0, 0));
 
-    //                    $("#map_container").height($(window).width()-100);
-    var map;
-    var title = 'Trạm 3G Viettel';
     var location = new google.maps.LatLng(10.375941, 105.41854);
     var myOptions = {
         zoom: 9,
@@ -19,46 +16,116 @@ document.onready = function () {
         mapTypeId: google.maps.MapTypeId.ROADMAP
     }
     map = new google.maps.Map(document.getElementById("googleMap"), myOptions);
-    var marker = new google.maps.Marker({
-        map: map,
-        position: location,
-        title: title,
-        icon: contextPath + '/img/green.ico'
-    });
-    var content = "<div style=\"width:350px;overflow-x:scroll\"><table class=\"table table-bordered\" > " +
-            " <thead>  " +
-            "    <tr> <th>#</th> <th>TenTram</th><th>NgayLapDat</th><th>DiaChiLapDat</th><th>TinhThanhLD</th><th>x</th> <th>y</th> </tr> " +
-            " </thead>  " +
-            "  <tbody>  " +
-            "      <tr> <th scope=\"row\">1</th> <td>Mark</td> <td>Ngay Lap Dat 1</td><td>Dia Chi Lap Dat 1</td><td>Tinh Thanh LD 1</td><td>x1</td> <td>y1</td> </tr>  " +
-            "  </tbody>  " +
-            "</table></div>";
-    var infoWindow = new google.maps.InfoWindow({
-//        content: "Trạm 1 tọa độ (x1,y1)"
-        content: content
-    });
-    infoWindow.open(map, marker);
-    google.maps.event.addListener(marker, 'click', function () {
-        infoWindow.open(map, marker);
-    })
-    var location1 = new google.maps.LatLng(10.664509, 105.09262);
-    var marker1 = new google.maps.Marker({
-        map: map,
-        position: location1,
-        title: title,
-        icon: contextPath + '/img/map-marker-pink.png'
-    });
-    var infoWindow1 = new google.maps.InfoWindow({
-        content: "Trạm 2 tọa độ (x2,y2)"
-//        content: "<img src='/img/bts.jpg'>"
-    });
-//    infoWindow1.open(map, marker1);
-    google.maps.event.addListener(marker1, 'click', function () {
-        infoWindow1.open(map, marker1);
-    })
 
+    var clusterStyles = [
+        {
+            height: 53,
+            url: "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m1.png",
+            width: 53
+        },
+        {
+            height: 53,
+            url: "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m1.png",
+            width: 53
+        },
+        {
+            height: 53,
+            url: "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m1.png",
+            width: 53
+        },
+        {
+            height: 53,
+            url: "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m1.png",
+            width: 53
+        },
+        {
+            height: 53,
+            url: "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m1.png",
+            width: 53
+        },
+    ];
+
+    var mcOptions = {gridSize: 50,
+        maxZoom: 15,
+        styles: clusterStyles,
+    };
+
+    for (var i = 0; i < tramBTSList.length; i++) {
+        var tramBTS = tramBTSList[i];
+        var key = tramBTS.MaSo;
+//        console.log(key)
+        var latLng = new google.maps.LatLng(tramBTS.ToaDoVD,
+                tramBTS.ToaDoKD);
+        var icon;
+        if (tramBTS.TrangThai == 1) {
+            icon = contextPath + '/img/green.ico';
+        } else if (tramBTS.TrangThai == 2) {
+            icon = contextPath + '/img/red.ico';
+        } else {
+            continue;
+        }
+        var image = {
+            url: icon,
+            scaledSize: new google.maps.Size(28, 28)
+        };
+        var marker = new google.maps.Marker({
+            position: latLng,
+//            icon: icon, 
+            icon: image,
+            title: tramBTS.TenTram});
+        markers[key] = (marker);
+        markerArray.push(marker);
+//        markers[i]=marker;
+
+
+        var content = "<div style=\"width:350px;overflow:scroll\"><table class=\"table table-bordered\" > " +
+                " <thead>  " +
+                "    <tr> <th colspan=\"2\">Thông tin trạm</th></tr> " +
+                " </thead>  " +
+                "  <tbody>  " +
+                "      <tr> <td>Tên trạm</td> <td>" + tramBTS.TenTram + "</td></tr>  " +
+                "      <tr> <td>Ngày lắp đăt</td> <td>" + tramBTS.NgayLapDat + "</td></tr>  " +
+                "      <tr> <td>Điạ chỉ lắp đặt</td> <td>" + tramBTS.DiaChiLapDat + "</td></tr>  " +
+                "      <tr> <td>Tỉnh thành lắp đặt</td> <td>" + tinhThanhMap[tramBTS.TinhThanhLD].Ten + "</td></tr>  " +
+                "      <tr> <td>Quận huyện lắp đặt</td> <td>" + quanHuyenMap[tramBTS.QuanHuyenLD].Ten + "</td></tr>  " +
+                "      <tr> <td>Phường xã lắp đặt</td> <td>" + phuongXaMap[tramBTS.PhuongXaLD].Ten + "</td></tr>  " +
+                "      <tr> <td>Toạ độ X</td> <td>" + tramBTS.ToaDoVD + "</td></tr>  " +
+                "      <tr> <td>Toạ độ Y</td> <td>" + tramBTS.ToaDoKD + "</td></tr>  " +
+                "      <tr> <td>Trạng thái</td> <td>" + tinhtrangMap[tramBTS.TrangThai] + "</td></tr>  " +
+                "      <tr> <td>Chiều cao</td> <td>" + tramBTS.ChieuCao + "</td></tr>  " +
+                "  </tbody>  " +
+                "</table></div>";
+        contents[key] = content;
+        var infoWindow = new google.maps.InfoWindow({
+            content: contents[key]
+        });
+        infoWindows[key] = (infoWindow);
+//        google.maps.event.addListener(markers[key], 'click', function () {
+//            infoWindows[key].open(map, markers[key]);
+//        })
+    }
+    for (var i = 0; i < tramBTSList.length; i++) {
+        var tramBTS = tramBTSList[i];
+        var key = tramBTS.MaSo;
+
+        google.maps.event.addListener(markers[key], 'click', (function (marker, content, infowindow) {
+            return function () {
+                if (globalInfoWindow) {
+                    globalInfoWindow.close();
+                }
+                globalInfoWindow = new google.maps.InfoWindow({
+                    content: content
+                });
+                globalInfoWindow.open(map, marker);
+//                infowindow.setContent(content);
+//                infowindow.open(map, marker);
+            };
+        })(markers[key], contents[key], infoWindows[key]));
+    }
+    var mc = new MarkerClusterer(map, markerArray, mcOptions);
 
 }
+
 
 
 

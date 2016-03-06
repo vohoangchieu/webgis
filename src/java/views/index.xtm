@@ -14,7 +14,7 @@
         <!--<script src="http://maps.googleapis.com/maps/api/js"></script>-->
     </head>
     <body>
-        <script> var contextPath='{{contextPath}}';</script>
+        <script> var contextPath = '{{contextPath}}';</script>
         <div class="container" style="width: 980px;margin: auto;padding: 0;height: 100%">
             <div class="row" style="height: 125px;text-align: center;border: 1px solid #dfdfdf;">
                 <img src="{{contextPath}}/img/banner.jpg" height="125" width="980px">
@@ -25,7 +25,7 @@
                         .glyphicon{
                             color: #31708f;
                             font-size: 20px;
-                            margin-right: 8px;
+                            margin-right: 10px;
                         }
                     </style>
                     <li role="presentation"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true" ></span></li>
@@ -33,6 +33,8 @@
                     <li role="presentation"><span class="glyphicon glyphicon-info-sign" aria-hidden="true" ></span></li>
                     <li role="presentation"><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span></li>
                     <li role="presentation"><span class="glyphicon glyphicon-hand-up" aria-hidden="true"></span></li>
+                    <li role="presentation"><span class="glyphicon glyphicon-globe" aria-hidden="true"></span></li>
+                    <!--<li role="presentation"><span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span></li>-->
                     <!--                    <li role="presentation" class="active"><a href="#">Trang chu</a></li>
                                         <li role="presentation"><a href="#">Profile</a></li>
                                         <li role="presentation"><a href="#">Messages</a></li>-->
@@ -48,17 +50,19 @@
                             <div class="panel-body">
                                 <form class="form-horizontal" style="margin: auto;margin-top: 5px">
                                     <div class="form-group" style="width: 90%;margin-left: auto;margin-right: auto">
-                                        <!--<label class="sr-only" for="kihieutram">Kí hiệu trạm</label>-->
                                         <input id="kihieutram" type="text" class="form-control" placeholder="Kí hiệu trạm">
                                     </div>
                                     <div class="form-group" style="width: 90%;margin-left: auto;margin-right: auto">
-                                        <!--<label class="sr-only" for="district">Tên trạm</label>-->
                                         <input id="tentram" type="text" class="form-control" placeholder="Tên trạm">
                                     </div>
-                                    
+
                                     <div class="form-group" style="width: 90%;margin-left: auto;margin-right: auto">
-                                        <label class="sr-only" for="district">Tọa độ (x,y)</label>
-                                        <input id="toadoxy" type="text" class="form-control" placeholder="Tọa độ (x,y)">
+                                        <label class="sr-only" for="district">Tọa độ X</label>
+                                        <input id="toadox" type="text" class="form-control" placeholder="Tọa độ X">
+                                    </div>
+                                    <div class="form-group" style="width: 90%;margin-left: auto;margin-right: auto">
+                                        <label class="sr-only" for="district">Tọa độ Y</label>
+                                        <input id="toadoy" type="text" class="form-control" placeholder="Tọa độ Y">
                                     </div>
                                     <div class="form-group" style="width: 90%;margin-left: auto;margin-right: auto">
                                         <input class="btn btn-info" type="submit" value="Tìm kiếm">
@@ -69,16 +73,15 @@
                         </div>
                         <div class="panel panel-info">
                             <div class="panel-heading">Kết quả tìm kiếm BTS</div>
-                            <div class="panel-body" style="width:100%;overflow-x: scroll">
-                                <table class="table table-bordered" > 
+                            <div class="panel-body" style="width:100%;height: 200px;overflow: scroll">
+                                <table class="table table-bordered" style="width: 300px"> 
                                     <thead> 
                                         <tr> <th>#</th> 
-                                            <th>Tên trạm</th><th>NgayLapDat</th><th>DiaChiLapDat</th><th>TinhThanhLD</th><th>x</th> <th>y</th> </tr>
+                                            <th>Tên trạm</th><th>Ngày lắp đăt</th><th>Điạ chỉ lắp đặt</th><th>Tỉnh thành lắp đặt</th><th>x</th> <th>y</th> </tr>
                                     </thead> 
                                     <tbody> 
-                                        <tr> <th scope="row">1</th> <td>Mark</td> <td>Ngay Lap Dat 1</td><td>Dia Chi Lap Dat 1</td><td>Tinh Thanh LD 1</td><td>x1</td> <td>y1</td> </tr> 
-                                        <tr> <th scope="row">2</th> <td>Jacob</td> <td>Ngay Lap Dat 2</td><td>Dia Chi Lap Dat 2</td><td>Tinh Thanh LD 2</td><td>x2</td> <td>y2</td> </tr> 
-                                        <!--<tr> <th scope="row">3</th> <td>Larry</td> <td>Ngay Lap Dat 3</td><td>Dia Chi Lap Dat 3</td><td>Tinh Thanh LD 3</td><td>x3</td> <td>y3</td> </tr>--> 
+                                        <tr> <th scope="row">1</th> <td>Long Xuyên 1</td> <td>1/1/2016</td><td>Ấp 1 Cẩm Sơn, Long Xuyên</td><td>An Giang</td><td>x1</td> <td>y1</td> </tr> 
+                                        <tr> <th scope="row">2</th> <td>Long Xuyên 2</td> <td>2/2/2016</td><td>Ấp 2 Cẩm Sơn, Long Xuyên</td><td>An Giang</td><td>x2</td> <td>y2</td> </tr> 
                                     </tbody> 
                                 </table>
                             </div>
@@ -87,18 +90,16 @@
                             <div class="panel-heading">Chú thích</div>
                             <div class="panel-body" >
                                 <table class="table table-bordered" > 
-                                    
+
                                     <tbody> 
-                                        <tr> <td style="width: 30%"><img src="{{contextPath}}/img/green.ico" style="width: 48px;margin: auto"></td> <td style="width: 30%;margin: auto"><img src="{{contextPath}}/img/red.ico" style="width: 48px;margin: auto"></td><td style="width: 30%"><img src="{{contextPath}}/img/orange.ico" style="width: 48px"></td></tr> 
-                                        <tr> <td>Da quy hoach</td> <td>Dang quy hoach</td><td>Dang xem</td></tr> 
+                                        <tr> <td style="margin: auto"><img src="{{contextPath}}/img/green.ico" style="width: 28px;margin: auto"></td><td>Trạm đã xây dựng</td></tr> 
+                                        <tr>   <td style="margin: auto"><img src="{{contextPath}}/img/red.ico" style="width: 28px;margin: auto"></td><td>Trạm trong quy hoạch</td></tr> 
                                     </tbody> 
                                 </table>
-                                <!--<div style="margin: auto;width: 64px"><img src="{{contextPath}}/img/green.ico"></div>-->
                             </div>
                         </div>
                     </div>
                     <div id="googleMap" class="col-md-9" style="border: 1px solid #dfdfdf;height: 600px">
-                        <!--<div  style="width: 100%;height: 100%"></div>-->
                     </div>
 
                 </div>
@@ -109,13 +110,17 @@
                 <script type="text/javascript" 
                 src="http://maps.googleapis.com/maps/api/js?"></script>
                 <script>
+                    var tinhThanhMap={{tinhThanhMap}};
+                    var quanHuyenMap={{quanHuyenMap}};
+                    var phuongXaMap={{phuongXaMap}};
+                    var tramBTSList={{tramBTSList}};
+                    var tinhtrangMap={{tinhtrangMap}};
                 </script>
-                <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+                <script src="{{contextPath}}/js/markerclusterer_compiled.js"></script>
                 <script src="{{contextPath}}/js/jquery.min.js"></script>
                 <script src="{{contextPath}}/js/jquery-ui.min.js"></script>
                 <script src="{{contextPath}}/js/jquery.textcomplete.min.js"></script>
                 <script src="{{contextPath}}/js/jquery.overlay.js"></script>
-                <!-- Include all compiled plugins (below), or include individual files as needed -->
                 <script src="{{contextPath}}/js/bootstrap.min.js"></script>
                 <script src="{{contextPath}}/js/select2.min.js"></script>
                 <script src="{{contextPath}}/js/common.js"></script>

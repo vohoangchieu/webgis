@@ -5,6 +5,7 @@
  */
 package web.gis;
 
+import com.google.gson.Gson;
 import hapax.Template;
 import hapax.TemplateDataDictionary;
 import hapax.TemplateDictionary;
@@ -13,6 +14,8 @@ import hapax.TemplateLoader;
 import hapax.TemplateResourceLoader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -40,24 +43,37 @@ public class IndexServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        TemplateDataDictionary dic = TemplateDictionary.create();
-        dic.setVariable("contextPath", AppConfig.contextPath);
-        
+
         try {
+            Gson gson = new Gson();
+            
+            TemplateDataDictionary dic = TemplateDictionary.create();
+            dic.setVariable("contextPath", AppConfig.contextPath);
+            DataAccess dataAccess = new DataAccess(AppConfig.databaseUrl, AppConfig.databaseUser, AppConfig.databasePassword);
+            HashMap<Integer, TinhThanhEntity> tinhThanhMap = dataAccess.getTinhThanhMap();
+            HashMap<Integer, QuanHuyenEntity> quanHuyenMap = dataAccess.getQuanHuyenMap();
+            HashMap<Integer, PhuongXaEntity> phuongXaMap = dataAccess.getPhuongXaMap();
+            List<TramBTSEntity> tramBTSList = dataAccess.getAllTramBTS();
+            dic.setVariable("tinhThanhMap", gson.toJson(tinhThanhMap));
+            dic.setVariable("quanHuyenMap", gson.toJson(quanHuyenMap));
+            dic.setVariable("phuongXaMap", gson.toJson(phuongXaMap));
+            dic.setVariable("tramBTSList", gson.toJson(tramBTSList));
+            dic.setVariable("tinhtrangMap", AppConfig.tinhtrangMap);
             Template template = getCTemplate("index");
             String data = template.renderToString(dic);
             outContent(data, response);
-        } catch (TemplateException ex) {
+        } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
         }
 
     }
+
     protected Template getCTemplate(String tpl) throws TemplateException {
         TemplateLoader templateLoader = TemplateResourceLoader.create("views/");
         Template template = templateLoader.getTemplate(tpl);
         return template;
     }
-    
+
     protected void outContent(String content, HttpServletResponse response) {
 
         PrintWriter out = null;

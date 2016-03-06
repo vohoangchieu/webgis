@@ -11,4 +11,8 @@ package web.gis.config;
  */
 public class AppConfig {
     public static String contextPath="";
+    public static String databaseUrl="";
+    public static String databaseUser="";
+    public static String databasePassword="";
+    public static String tinhtrangMap="";
 }

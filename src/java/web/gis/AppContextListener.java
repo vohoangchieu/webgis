@@ -31,37 +31,36 @@ public class AppContextListener implements ServletContextListener {
         AppConfig.contextPath = sce.getServletContext().getContextPath();
         Properties config = new Properties();
         try {
-            String fileName = "WEB-INF/classes/jdbc.properties";
+            String fileName = "WEB-INF/classes/appconfig.properties";
             InputStream input = sce.getServletContext().getResourceAsStream(fileName);
             config.load(input);
-        } catch (IOException ex) {
-            logger.info(ex.getMessage());
         } catch (Exception ex) {
             logger.info(ex.getMessage());
         }
-        
         Enumeration en = config.keys();
-
-        // System.out.println("********** System configuration **********");
         while (en.hasMoreElements()) {
             String key = (String) en.nextElement();
             String value = (String) config.get(key);
             logger.info(key + " => " + value);
             
         }
-        String host = "127.0.0.1";
-        String port = "3306";
-        String dbname = "chuyennganhso4t";
-        String JDBC_DRIVER = "com.mysql.jdbc.Driver";        
-        try {
-            Class.forName(JDBC_DRIVER);
-            String url = "jdbc:mysql://" + host + ":" + port + "/" + dbname + "?useUnicode=true&characterEncoding=UTF-8&";
-            Connection conn = DriverManager.getConnection(url, "gisuser", "gispas");
-            conn.createStatement();
-            conn.close();
-        } catch (Exception ex) {
-            logger.error(ex.getMessage(), ex);
-        }
+        AppConfig.databaseUrl=config.getProperty("databaseUrl");
+        AppConfig.databaseUser=config.getProperty("databaseUser");
+        AppConfig.databasePassword=config.getProperty("databasePassword");
+        AppConfig.tinhtrangMap=config.getProperty("tinhtrangMap");
+//        String host = "127.0.0.1";
+//        String port = "3306";
+//        String dbname = "chuyennganhso4t";
+//        String JDBC_DRIVER = "com.mysql.jdbc.Driver";        
+//        try {
+//            Class.forName(JDBC_DRIVER);
+//            String url = "jdbc:mysql://" + host + ":" + port + "/" + dbname + "?useUnicode=true&characterEncoding=UTF-8&";
+//            Connection conn = DriverManager.getConnection(url, "gisuser", "gispas");
+//            conn.createStatement();
+//            conn.close();
+//        } catch (Exception ex) {
+//            logger.error(ex.getMessage(), ex);
+//        }
         
     }
     
