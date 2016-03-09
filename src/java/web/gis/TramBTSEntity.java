@@ -45,7 +45,7 @@ public class TramBTSEntity {
     public boolean DaKiemTra;
     public  transient Date NgayKT;
     public  transient String TapTinKT;
-    public  transient String GhiChu;
+    public  String GhiChu;
     public  transient boolean IsActive;
     public  transient Date CreatedDate;
     public  transient int CreatedByUserID;

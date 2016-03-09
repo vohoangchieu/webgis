@@ -46,9 +46,16 @@ public class IndexServlet extends HttpServlet {
 
         try {
             Gson gson = new Gson();
-            
+            String maso = request.getParameter("maso");
+            if (maso == null) {
+                maso = "";
+            }
             TemplateDataDictionary dic = TemplateDictionary.create();
+            dic.setVariable("maso", maso);
             dic.setVariable("contextPath", AppConfig.contextPath);
+            dic.setVariable("homeLat", AppConfig.homeLat);
+            dic.setVariable("homeLng", AppConfig.homeLng);
+            dic.setVariable("defaultZoomLevel", AppConfig.defaultZoomLevel);
             DataAccess dataAccess = new DataAccess(AppConfig.databaseUrl, AppConfig.databaseUser, AppConfig.databasePassword);
             HashMap<Integer, TinhThanhEntity> tinhThanhMap = dataAccess.getTinhThanhMap();
             HashMap<Integer, QuanHuyenEntity> quanHuyenMap = dataAccess.getQuanHuyenMap();

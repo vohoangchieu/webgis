@@ -228,8 +228,8 @@ public class DataAccess {
                 + " `DTSanLap`, `DienThoaiDVQL`, "
                 + " `ThueDDTuNgay`, `ThueDDDenNgay`, "
                 + "`NgayDuaVaoSuDung`, "
-                + " `DaKiemTra` "
-                + " from `thongtin_trambts` ";
+                + " `DaKiemTra`,`GhiChu` "
+                + " from `thongtin_trambts` where IsActive=1";
 
         try {
             getConnection();
@@ -257,6 +257,7 @@ public class DataAccess {
                 entity.ThueDDDenNgay = resultSet.getTimestamp("ThueDDDenNgay");
                 entity.NgayDuaVaoSuDung = resultSet.getTimestamp("NgayDuaVaoSuDung");
                 entity.DaKiemTra = resultSet.getInt("DaKiemTra") == 1;
+                entity.GhiChu = resultSet.getString("GhiChu");
                 result.add(entity);
             }
 

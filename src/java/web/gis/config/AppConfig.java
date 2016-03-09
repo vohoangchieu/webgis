@@ -15,4 +15,7 @@ public class AppConfig {
     public static String databaseUser="";
     public static String databasePassword="";
     public static String tinhtrangMap="";
+    public static String homeLat="";
+    public static String homeLng="";
+    public static String defaultZoomLevel="";
 }

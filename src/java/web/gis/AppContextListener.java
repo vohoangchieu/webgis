@@ -42,31 +42,48 @@ public class AppContextListener implements ServletContextListener {
             String key = (String) en.nextElement();
             String value = (String) config.get(key);
             logger.info(key + " => " + value);
-            
+
         }
-        AppConfig.databaseUrl=config.getProperty("databaseUrl");
-        AppConfig.databaseUser=config.getProperty("databaseUser");
-        AppConfig.databasePassword=config.getProperty("databasePassword");
-        AppConfig.tinhtrangMap=config.getProperty("tinhtrangMap");
+        AppConfig.databaseUrl = config.getProperty("databaseUrl");
+        AppConfig.databaseUser = config.getProperty("databaseUser");
+        AppConfig.databasePassword = config.getProperty("databasePassword");
+        AppConfig.tinhtrangMap = config.getProperty("tinhtrangMap");
+        AppConfig.homeLat = config.getProperty("homeLat");
+        AppConfig.homeLng = config.getProperty("homeLng");
+        AppConfig.defaultZoomLevel = config.getProperty("defaultZoomLevel");
+        String OPENSHIFT_MYSQL_DB_HOST = System.getenv("OPENSHIFT_MYSQL_DB_HOST");
+        if (OPENSHIFT_MYSQL_DB_HOST != null) {
+            String OPENSHIFT_MYSQL_DB_PORT = System.getenv("OPENSHIFT_MYSQL_DB_PORT");
+            String OPENSHIFT_MYSQL_DB_USERNAME = System.getenv("OPENSHIFT_MYSQL_DB_USERNAME");
+            String OPENSHIFT_MYSQL_DB_PASSWORD = System.getenv("OPENSHIFT_MYSQL_DB_PASSWORD");
+            String databaseUrl = "jdbc:mysql://" + OPENSHIFT_MYSQL_DB_HOST + ":" + OPENSHIFT_MYSQL_DB_PORT
+                    + "/chuyennganhso4t?useUnicode=true&characterEncoding=UTF-8&";
+            AppConfig.databaseUrl = databaseUrl;
+            AppConfig.databaseUser = OPENSHIFT_MYSQL_DB_USERNAME;
+            AppConfig.databasePassword = OPENSHIFT_MYSQL_DB_PASSWORD;
+        }
+
 //        String host = "127.0.0.1";
 //        String port = "3306";
 //        String dbname = "chuyennganhso4t";
-//        String JDBC_DRIVER = "com.mysql.jdbc.Driver";        
-//        try {
-//            Class.forName(JDBC_DRIVER);
-//            String url = "jdbc:mysql://" + host + ":" + port + "/" + dbname + "?useUnicode=true&characterEncoding=UTF-8&";
-//            Connection conn = DriverManager.getConnection(url, "gisuser", "gispas");
-//            conn.createStatement();
-//            conn.close();
-//        } catch (Exception ex) {
-//            logger.error(ex.getMessage(), ex);
-//        }
-        
+        String JDBC_DRIVER = "com.mysql.jdbc.Driver";
+        try {
+            Class.forName(JDBC_DRIVER);
+            Connection conn = DriverManager.getConnection(AppConfig.databaseUrl, AppConfig.databaseUser, AppConfig.databasePassword);
+            conn.createStatement();
+            conn.close();
+            logger.info("connect to db success");
+        } catch (Exception ex) {
+            logger.error("connect to db exception " + ex.getMessage(), ex);
+            logger.info("databaseUrl=" + AppConfig.databaseUrl);
+            logger.info("databaseUser=" + AppConfig.databaseUser);
+            logger.info("databasePassword=" + AppConfig.databasePassword);
+        }
     }
-    
+
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
         logger.info("contextDestroyed");
     }
-    
+
 }
