@@ -161,8 +161,8 @@ $(function () {
             if (
                     (kihieutram == tramBTS.MaSo) ||
                     (tentram && tramBTS.TenTram1.indexOf(tentram) > -1) ||
-                    (toadox == tramBTS.ToaDoVD) ||
-                    (toadoy == tramBTS.ToaDoKD)
+                    (toadox && toadox == tramBTS.ToaDoVD) ||
+                    (toadoy && toadoy == tramBTS.ToaDoKD)
                     ) {
                 html += "<tr onclick='showMarker(" + tramBTS.MaSo + ")'> \n\
                     <td>" + tramBTS.MaSo + "</td>\n\
