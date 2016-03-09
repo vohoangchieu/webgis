@@ -15,9 +15,9 @@ document.onready = function () {
     }
     map = new google.maps.Map(document.getElementById("googleMap"), myOptions);
 
-    google.maps.event.addListener(map, 'click', function(event) {
+    google.maps.event.addListener(map, 'click', function (event) {
 
-       console.log(event.latLng);
+        console.log(event.latLng);
 
     });
 
@@ -59,13 +59,18 @@ document.onready = function () {
 //        console.log(key)
         var latLng = new google.maps.LatLng(tramBTS.ToaDoVD,
                 tramBTS.ToaDoKD);
+
         var icon;
-        if (tramBTS.TrangThai == 1) {
-            icon = contextPath + '/img/green.ico';
-        } else if (tramBTS.TrangThai == 2) {
-            icon = contextPath + '/img/red.ico';
+        if (tramBTS.MaSo == maso) {
+            icon = contextPath + '/img/orange.ico';
         } else {
-            continue;
+            if (tramBTS.TrangThai == 1) {
+                icon = contextPath + '/img/green.ico';
+            } else if (tramBTS.TrangThai == 2) {
+                icon = contextPath + '/img/red.ico';
+            } else {
+                continue;
+            }
         }
         var image = {
             url: icon,
@@ -150,9 +155,14 @@ $(function () {
         var toadoy = $("#toadoy").val();
         for (var i = 0; i < tramBTSList.length; i++) {
             var tramBTS = tramBTSList[i];
+            if (tramBTS.ToaDoVD <= 0 || tramBTS.ToaDoKD <= 0) {
+                continue;
+            }
             if (
                     (kihieutram == tramBTS.MaSo) ||
-                    (tentram && tramBTS.TenTram1.indexOf(tentram) > -1)
+                    (tentram && tramBTS.TenTram1.indexOf(tentram) > -1) ||
+                    (toadox == tramBTS.ToaDoVD) ||
+                    (toadoy == tramBTS.ToaDoKD)
                     ) {
                 html += "<tr onclick='showMarker(" + tramBTS.MaSo + ")'> \n\
                     <td>" + tramBTS.MaSo + "</td>\n\
@@ -223,4 +233,19 @@ $(function () {
     $("#zoom-out").click(zoomOut);
     $("#home").click(goHome);
 });
+
+var rad = function (x) {
+    return x * Math.PI / 180;
+};
+var getDistance = function (p1, p2) {
+    var R = 6378137;
+    // Earth’s mean radius in meter
+    var dLat = rad(p2.lat() - p1.lat());
+    var dLong = rad(p2.lng() - p1.lng());
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(rad(p1.lat())) * Math.cos(rad(p2.lat())) * Math.sin(dLong / 2) * Math.sin(dLong / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c;
+    return d; // returns the distance in meter 
+};
+
 

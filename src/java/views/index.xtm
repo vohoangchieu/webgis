@@ -107,7 +107,7 @@
                                     Copyright@2016
                                 </div>-->
                 <script type="text/javascript" 
-                src="http://maps.googleapis.com/maps/api/js?"></script>
+                src="http://maps.googleapis.com/maps/api/js?key=AIzaSyByc8l-aogtJC0sXXt33SBbjvHC6KbBZ0Y&libraries=drawing"></script>
                 <script>
             var tinhThanhMap = {{tinhThanhMap}};
             var quanHuyenMap = {{quanHuyenMap}};
