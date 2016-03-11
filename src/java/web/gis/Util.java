@@ -20,4 +20,13 @@ public class Util {
         }
         return value.trim();
     }
+
+    public static String getRequestUrl(HttpServletRequest request) {
+        String result = request.getScheme() + "://" + request.getServerName();
+        if (request.getServerPort() != 80) {
+            result = result + ":" + request.getServerPort();
+        }
+        result = result + request.getRequestURI();
+        return result;
+    }
 }

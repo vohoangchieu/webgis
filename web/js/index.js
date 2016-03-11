@@ -14,8 +14,11 @@ document.onready = function () {
         location = new google.maps.LatLng(homeLat, homeLng);
     }
 
+    if (!zoom) {
+        zoom = defaultZoomLevel;
+    }
     var mapOptions = {
-        zoom: defaultZoomLevel,
+        zoom: parseInt(zoom),
         center: location,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     }
@@ -26,7 +29,9 @@ document.onready = function () {
         console.log(event.latLng);
 
     });
-
+    map.addListener('center_changed', changeCurrentLink);
+    map.addListener('zoom_changed', changeCurrentLink);
+    changeCurrentLink();
     var clusterStyles = [
         {
             height: 53,
@@ -148,6 +153,7 @@ document.onready = function () {
 //    }
 }
 $(function () {
+
     for (var i = 0; i < tramBTSList.length; i++) {
         var tramBTS = tramBTSList[i];
         tramBTS.TenTram1 = replaceUnicode(tramBTS.TenTram).toLowerCase();
@@ -187,6 +193,9 @@ $(function () {
             //<tr> <td>#</td><td>Tên trạm</td><td>Ngày lắp đăt</td><td>Điạ chỉ lắp đặt</td><td>Tỉnh thành lắp đặt</td><td>Quận huyện lắp đặt</td><td>Phường xã lắp đặt</td><td>Toạ độ X</td><td>Toạ độ Y</td><td>Trạng thái</td><td>Chiều cao</td><td>Ghi chú</td> </tr>
         }
         $("#search-result-panel tbody").html(html);
+    })
+    $("#link").click(function(){
+        selectText("link");
     })
 })
 function replaceUnicode(input) {
@@ -244,11 +253,22 @@ function setPan() {
         map.setOptions({draggable: true});
     }
 }
+function showLinkShare() {
+    if ($("#share span").hasClass("toolactive")) {
+        $("#share span").removeClass("toolactive");
+        $("#link").hide();
+    } else {
+        $("#share span").addClass("toolactive");
+        $("#link").show();
+    }
+}
 $(function () {
     $("#zoom-in").click(zoomIn);
     $("#zoom-out").click(zoomOut);
     $("#home").click(goHome);
     $("#pan").click(setPan);
+    $("#share").click(showLinkShare);
+
 });
 
 var rad = function (x) {
@@ -264,5 +284,10 @@ var getDistance = function (p1, p2) {
     var d = R * c;
     return d; // returns the distance in meter 
 };
+function changeCurrentLink() {
+    var latLng = map.getCenter();
+    var currentUrl = requestUrl + "?x=" + latLng.lat() + "&y=" + latLng.lng() + "&zoom=" + map.getZoom();
+    $("#link").text(currentUrl);
+}
 
 
