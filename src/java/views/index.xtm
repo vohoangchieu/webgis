@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en"><head>
+        <link rel="icon" href="{{contextPath}}/img/favicon.ico" type="image/x-icon">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Gis</title>
+        <title>{{webTitle}}</title>
 
         <!-- Bootstrap -->
         <link href="{{contextPath}}/css/bootstrap.min.css" rel="stylesheet">
@@ -16,55 +17,44 @@
     <body>
         <script> var contextPath = '{{contextPath}}';</script>
         <div class="container" style="width: 980px;margin: auto;padding: 0;height: 100%">
-            <div class="row" style="height: 125px;text-align: center;border: 1px solid #dfdfdf;">
-                <img src="{{contextPath}}/img/banner.jpg" height="125" width="980px">
+            <div class="row" style="height: 100px;text-align: center;border: 1px solid #dfdfdf;">
+                <img src="{{contextPath}}/img/banner.jpg" height="100%" width="100%">
             </div>
             <div class="row" style=";border: 1px solid #dfdfdf;border-bottom: none">
                 <ul class="nav nav-tabs">
-                    <style>
-                        .glyphicon{
-                            color: #31708f;
-                            font-size: 20px;
-                            margin-right: 10px;
-                        }
-                    </style>
-                    <li role="presentation"id="home"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></li>
-                    <li role="presentation" id="zoom-in"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true" ></span></li>
-                    <li role="presentation" id="zoom-out"><span class="glyphicon glyphicon-zoom-out" aria-hidden="true" ></span></li>
-                    <li role="presentation"><span class="glyphicon glyphicon-info-sign" aria-hidden="true" ></span></li>
+                    <li title="Về địa điểm mặc định" role="presentation" id="home"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></li>
+                    <li title="Phóng to bản đồ" role="presentation" id="zoom-in"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true" ></span></li>
+                    <li title="Thu nhỏ bản đồ" role="presentation" id="zoom-out"><span class="glyphicon glyphicon-zoom-out" aria-hidden="true" ></span></li>
+                    <!--<li role="presentation"><span class="glyphicon glyphicon-info-sign" aria-hidden="true" ></span></li>-->
                     <li role="presentation"><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span></li>
                     <li role="presentation"><span class="glyphicon glyphicon-hand-up" aria-hidden="true"></span></li>
-                    <!--<li role="presentation"><span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span></li>-->
-                    <!--                    <li role="presentation" class="active"><a href="#">Trang chu</a></li>
-                                        <li role="presentation"><a href="#">Profile</a></li>
-                                        <li role="presentation"><a href="#">Messages</a></li>-->
                 </ul>
             </div>
             <div class="row" style="border: 1px solid #dfdfdf;border-top: none">
 
-                <div class="row" style=";height: auto;">
-                    <div id=left-panel" class="col-md-3" style="border: 1px solid #dfdfdf;height: 100%">
+                <div class="row" >
+                    <div id=left-panel" class="col-md-3" style="border: 1px solid #dfdfdf;height: 100%;border-bottom: none">
 
-                        <div class="panel panel-info" style="margin-top: 5px">
+                        <div class="panel panel-info" id="search-panel">
                             <div class="panel-heading">Tìm kiếm BTS</div>
                             <div class="panel-body">
-                                <form class="form-horizontal" style="margin: auto;margin-top: 5px">
-                                    <div class="form-group" style="width: 90%;margin-left: auto;margin-right: auto">
+                                <form class="form-horizontal" >
+                                    <div class="form-group" >
                                         <input id="kihieutram" type="text" class="form-control" placeholder="Kí hiệu trạm">
                                     </div>
-                                    <div class="form-group" style="width: 90%;margin-left: auto;margin-right: auto">
+                                    <div class="form-group" >
                                         <input id="tentram" type="text" class="form-control" placeholder="Tên trạm">
                                     </div>
 
-                                    <div class="form-group" style="width: 90%;margin-left: auto;margin-right: auto">
+                                    <div class="form-group" >
                                         <label class="sr-only" for="toadox">Tọa độ X</label>
                                         <input id="toadox" type="text" class="form-control" placeholder="Tọa độ X">
                                     </div>
-                                    <div class="form-group" style="width: 90%;margin-left: auto;margin-right: auto">
+                                    <div class="form-group" >
                                         <label class="sr-only" for="toadoy">Tọa độ Y</label>
                                         <input id="toadoy" type="text" class="form-control" placeholder="Tọa độ Y">
                                     </div>
-                                    <div class="form-group" style="width: 90%;margin-left: auto;margin-right: auto">
+                                    <div class="form-group" >
                                         <input class="btn btn-info" type="button" value="Tìm kiếm" id="timkiem">
                                     </div>
 
@@ -73,14 +63,12 @@
                         </div>
                         <div class="panel panel-info" id="search-result-panel">
                             <div class="panel-heading">Kết quả tìm kiếm BTS</div>
-                            <div class="panel-body" style="width:100%;height: 200px;overflow: scroll">
-                                <table class="table table-bordered" style="width: 300px"> 
+                            <div class="panel-body" style="width:100%;height: 100px;overflow: scroll">
+                                <table class="table table-bordered" style="width: 960px"> 
                                     <thead> 
                                         <tr> <th>#</th><th>Tên trạm</th><th>Ngày lắp đăt</th><th>Điạ chỉ lắp đặt</th><th>Tỉnh thành lắp đặt</th><th>Quận huyện lắp đặt</th><th>Phường xã lắp đặt</th><th>Toạ độ X</th><th>Toạ độ Y</th><th>Trạng thái</th><th>Chiều cao</th><th>Ghi chú</th> </tr>
                                     </thead> 
                                     <tbody> 
-<!--                                        <tr> <th scope="row">1</th> <td>Long Xuyên 1</td> <td>1/1/2016</td><td>Ấp 1 Cẩm Sơn, Long Xuyên</td><td>An Giang</td><td>x1</td> <td>y1</td> </tr> 
-                                        <tr> <th scope="row">2</th> <td>Long Xuyên 2</td> <td>2/2/2016</td><td>Ấp 2 Cẩm Sơn, Long Xuyên</td><td>An Giang</td><td>x2</td> <td>y2</td> </tr> -->
                                     </tbody> 
                                 </table>
                             </div>
@@ -88,7 +76,7 @@
                         <div class="panel panel-info">
                             <div class="panel-heading">Chú thích</div>
                             <div class="panel-body" >
-                                <table class="table table-bordered" > 
+                                <table class="table table-bordered" style="margin-bottom: 0"> 
 
                                     <tbody> 
                                         <tr> <td style="margin: auto"><img src="{{contextPath}}/img/green.ico" style="width: 28px;margin: auto"></td><td>Trạm đã xây dựng</td></tr> 
@@ -98,14 +86,11 @@
                             </div>
                         </div>
                     </div>
-                    <div id="googleMap" class="col-md-9" style="border: 1px solid #dfdfdf;height: 620px">
+                    <div id="googleMap" class="col-md-9" style="border: 1px solid #dfdfdf;height: 480px">
                     </div>
 
                 </div>
 
-                <!--                <div class="row" style=";border: 1px solid #dfdfdf;;text-align: center;">
-                                    Copyright@2016
-                                </div>-->
                 <script type="text/javascript" 
                 src="http://maps.googleapis.com/maps/api/js?key=AIzaSyByc8l-aogtJC0sXXt33SBbjvHC6KbBZ0Y&libraries=drawing"></script>
                 <script>

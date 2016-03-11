@@ -6,6 +6,7 @@
 package web.gis;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import hapax.Template;
 import hapax.TemplateDataDictionary;
 import hapax.TemplateDictionary;
@@ -45,13 +46,15 @@ public class IndexServlet extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-            Gson gson = new Gson();
+            GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat(AppConfig.dateFormat);
+            Gson gson = gsonBuilder.create();
             String maso = request.getParameter("maso");
             if (maso == null) {
                 maso = "";
             }
             TemplateDataDictionary dic = TemplateDictionary.create();
             dic.setVariable("maso", maso);
+            dic.setVariable("webTitle", AppConfig.webTitle);
             dic.setVariable("contextPath", AppConfig.contextPath);
             dic.setVariable("homeLat", AppConfig.homeLat);
             dic.setVariable("homeLng", AppConfig.homeLng);

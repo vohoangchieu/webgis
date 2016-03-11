@@ -56,7 +56,6 @@ document.onready = function () {
     for (var i = 0; i < tramBTSList.length; i++) {
         var tramBTS = tramBTSList[i];
         var key = tramBTS.MaSo;
-//        console.log(key)
         var latLng = new google.maps.LatLng(tramBTS.ToaDoVD,
                 tramBTS.ToaDoKD);
 
@@ -86,23 +85,23 @@ document.onready = function () {
 //        markers[i]=marker;
 
 
-        var content = "<div style=\"width:350px;overflow:scroll\"><table class=\"table table-bordered\" > " +
-                " <thead>  " +
-                "    <tr> <th colspan=\"2\">Thông tin trạm</th></tr> " +
+        var content = "<div style=\"width:400px;max-height:300px;overflow:scroll\"><table class=\"table table-bordered\" > " +
+                " <thead style='background:#d9edf7'>  " +
+                "    <tr> <th colspan=\"2\" style='text-align:center'>Thông tin trạm</th></tr> " +
                 " </thead>  " +
                 "  <tbody>  " +
-                "      <tr> <td>Tên trạm</td> <td>" + tramBTS.TenTram + "</td></tr>  " +
-                "      <tr> <td>Ngày lắp đăt</td> <td>" + tramBTS.NgayLapDat + "</td></tr>  " +
-                "      <tr> <td>Điạ chỉ lắp đặt</td> <td>" + tramBTS.DiaChiLapDat + "</td></tr>  " +
-                "      <tr> <td>Tỉnh thành lắp đặt</td> <td>" + tinhThanhMap[tramBTS.TinhThanhLD].Ten + "</td></tr>  " +
-                "      <tr> <td>Quận huyện lắp đặt</td> <td>" + quanHuyenMap[tramBTS.QuanHuyenLD].Ten + "</td></tr>  " +
-                "      <tr> <td>Phường xã lắp đặt</td> <td>" + phuongXaMap[tramBTS.PhuongXaLD].Ten + "</td></tr>  " +
-                "      <tr> <td>Toạ độ X</td> <td>" + tramBTS.ToaDoVD + "</td></tr>  " +
-                "      <tr> <td>Toạ độ Y</td> <td>" + tramBTS.ToaDoKD + "</td></tr>  " +
-                "      <tr> <td>Trạng thái</td> <td>" + tinhtrangMap[tramBTS.TrangThai] + "</td></tr>  " +
-                "      <tr> <td>Chiều cao</td> <td>" + tramBTS.ChieuCao + "</td></tr>  " +
-                "      <tr> <td>Ghi chú</td> <td>" + tramBTS.GhiChu + "</td></tr>  " +
-                "      <tr> <td>Link</td> <td><a href='" + contextPath + "/?maso=" + tramBTS.MaSo + "'>" + tramBTS.TenTram + "</a></td></tr>  " +
+                "      <tr> <th>Tên trạm</th> <td>" + tramBTS.TenTram + "</td></tr>  " +
+                "      <tr> <th>Ngày lắp đăt</th> <td>" + tramBTS.NgayLapDat + "</td></tr>  " +
+                "      <tr> <th>Điạ chỉ lắp đặt</th> <td>" + tramBTS.DiaChiLapDat + "</td></tr>  " +
+                "      <tr> <th>Tỉnh thành lắp đặt</th> <td>" + tinhThanhMap[tramBTS.TinhThanhLD].Ten + "</td></tr>  " +
+                "      <tr> <th>Quận huyện lắp đặt</th> <td>" + quanHuyenMap[tramBTS.QuanHuyenLD].Ten + "</td></tr>  " +
+                "      <tr> <th>Phường xã lắp đặt</th> <td>" + phuongXaMap[tramBTS.PhuongXaLD].Ten + "</td></tr>  " +
+                "      <tr> <th>Toạ độ X</th> <td>" + tramBTS.ToaDoVD + "</td></tr>  " +
+                "      <tr> <th>Toạ độ Y</th> <td>" + tramBTS.ToaDoKD + "</td></tr>  " +
+                "      <tr> <th>Trạng thái</th> <td>" + tinhtrangMap[tramBTS.TrangThai] + "</td></tr>  " +
+                "      <tr> <th>Chiều cao</th> <td>" + tramBTS.ChieuCao + "</td></tr>  " +
+                "      <tr> <th>Ghi chú</th> <td>" + tramBTS.GhiChu + "</td></tr>  " +
+                "      <tr> <th>Link</th> <td><a href='" + contextPath + "/?maso=" + tramBTS.MaSo + "'>" + tramBTS.TenTram + "</a></td></tr>  " +
                 "  </tbody>  " +
                 "</table></div>";
         contents[key] = content;
@@ -164,7 +163,7 @@ $(function () {
                     (toadox && toadox == tramBTS.ToaDoVD) ||
                     (toadoy && toadoy == tramBTS.ToaDoKD)
                     ) {
-                html += "<tr onclick='showMarker(" + tramBTS.MaSo + ")'> \n\
+                html += "<tr id='row-" + tramBTS.MaSo + "' onclick='handleSearchResultRowClick(" + tramBTS.MaSo + ")'> \n\
                     <td>" + tramBTS.MaSo + "</td>\n\
                     <td>" + tramBTS.TenTram + "</td>\n\
                     <td>" + tramBTS.NgayLapDat + "</td>\n\
@@ -224,9 +223,11 @@ function showMarker(MaSo) {
         map.panTo(markers[MaSo].getPosition());
         google.maps.event.trigger(markers[MaSo], 'click');
     }
-
-
-
+}
+function handleSearchResultRowClick(MaSo) {
+    $("#search-result-panel tbody tr").removeClass("row-active");
+    $("#row-" + MaSo).addClass("row-active");
+    showMarker(MaSo);
 }
 $(function () {
     $("#zoom-in").click(zoomIn);

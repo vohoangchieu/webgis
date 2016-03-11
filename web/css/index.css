@@ -5,3 +5,47 @@ body{
 .nav-tabs li{
     padding: 5px;
 }
+.glyphicon{
+    color: #31708f;
+    font-size: 20px;
+    margin-right: 10px;
+}
+.glyphicon:hover{
+    color: blue;
+    cursor: pointer;
+}
+th{
+    font-weight: 500;
+}
+.panel{
+    margin-bottom: 10px;
+}
+.panel-heading{
+    padding-top: 5px;padding-bottom:  5px;
+}
+.form-control{
+    font-size: 12px;
+    height: 30px;  
+}
+.btn{
+    font-size: 12px;
+}
+.nav-tabs li {
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+#search-panel{
+    margin-top: 5px;
+}
+#search-panel .form-group{
+    width: 90%;margin-left: auto;margin-right: auto;
+}
+#search-result-panel th,#search-result-panel td{
+    white-space: nowrap;
+}
+#search-result-panel tr:nth-child(even) {
+    background: #EEFFF7
+}
+.row-active{
+    color:#46b8da;
+}

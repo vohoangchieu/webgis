@@ -10,6 +10,7 @@ package web.gis.config;
  * @author chieuvh
  */
 public class AppConfig {
+    public static String webTitle="";
     public static String contextPath="";
     public static String databaseUrl="";
     public static String databaseUser="";
@@ -18,4 +19,5 @@ public class AppConfig {
     public static String homeLat="";
     public static String homeLng="";
     public static String defaultZoomLevel="";
+    public static String dateFormat="";
 }

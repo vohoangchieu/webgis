@@ -44,6 +44,7 @@ public class AppContextListener implements ServletContextListener {
             logger.info(key + " => " + value);
 
         }
+        AppConfig.webTitle = config.getProperty("webTitle");
         AppConfig.databaseUrl = config.getProperty("databaseUrl");
         AppConfig.databaseUser = config.getProperty("databaseUser");
         AppConfig.databasePassword = config.getProperty("databasePassword");
@@ -51,6 +52,7 @@ public class AppContextListener implements ServletContextListener {
         AppConfig.homeLat = config.getProperty("homeLat");
         AppConfig.homeLng = config.getProperty("homeLng");
         AppConfig.defaultZoomLevel = config.getProperty("defaultZoomLevel");
+        AppConfig.dateFormat = config.getProperty("dateFormat");
         String OPENSHIFT_MYSQL_DB_HOST = System.getenv("OPENSHIFT_MYSQL_DB_HOST");
         if (OPENSHIFT_MYSQL_DB_HOST != null) {
             String OPENSHIFT_MYSQL_DB_PORT = System.getenv("OPENSHIFT_MYSQL_DB_PORT");
