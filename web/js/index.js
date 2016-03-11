@@ -229,10 +229,20 @@ function handleSearchResultRowClick(MaSo) {
     $("#row-" + MaSo).addClass("row-active");
     showMarker(MaSo);
 }
+function setPan() {
+    if ($("#pan span").hasClass("toolactive")) {
+        $("#pan span").removeClass("toolactive");
+        map.setOptions({draggable: false});
+    } else {
+        $("#pan span").addClass("toolactive");
+        map.setOptions({draggable: true});
+    }
+}
 $(function () {
     $("#zoom-in").click(zoomIn);
     $("#zoom-out").click(zoomOut);
     $("#home").click(goHome);
+    $("#pan").click(setPan);
 });
 
 var rad = function (x) {

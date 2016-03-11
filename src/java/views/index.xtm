@@ -27,7 +27,7 @@
                     <li title="Thu nhỏ bản đồ" role="presentation" id="zoom-out"><span class="glyphicon glyphicon-zoom-out" aria-hidden="true" ></span></li>
                     <!--<li role="presentation"><span class="glyphicon glyphicon-info-sign" aria-hidden="true" ></span></li>-->
                     <li role="presentation"><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span></li>
-                    <li role="presentation"><span class="glyphicon glyphicon-hand-up" aria-hidden="true"></span></li>
+                    <li title="Cho phép di chuyển bản đồ" role="presentation" id="pan" ><span class="glyphicon glyphicon-hand-up toolactive" aria-hidden="true"></span></li>
                 </ul>
             </div>
             <div class="row" style="border: 1px solid #dfdfdf;border-top: none">
