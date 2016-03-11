@@ -198,15 +198,7 @@ $(function () {
         selectText("link");
     })
 })
-function replaceUnicode(input) {
-    var signedChars = "àảãáạăằẳẵắặâầẩẫấậđèẻẽéẹêềểễếệìỉĩíịòỏõóọôồổỗốộơờởỡớợùủũúụưừửữứựỳỷỹýỵÀẢÃÁẠĂẰẲẴẮẶÂẦẨẪẤẬĐÈẺẼÉẸÊỀỂỄẾỆÌỈĨÍỊÒỎÕÓỌÔỒỔỖỐỘƠỜỞỠỚỢÙỦŨÚỤƯỪỬỮỨỰỲỶỸÝỴ";
-    var unsignedChars = "aaaaaaaaaaaaaaaaadeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuuyyyyyAAAAAAAAAAAAAAAAADEEEEEEEEEEEIIIIIOOOOOOOOOOOOOOOOOUUUUUUUUUUUYYYYY";
-    var pattern = new RegExp("[" + signedChars + "]", "g");
-    var output = input.replace(pattern, function (m, key, value) {
-        return unsignedChars.charAt(signedChars.indexOf(m));
-    });
-    return output;
-}
+
 
 function zoomIn() {
     var zoom = map.getZoom();
