@@ -7,13 +7,19 @@ var globalInfoWindow = null;
 var map;
 document.onready = function () {
 
-    var location = new google.maps.LatLng(homeLat, homeLng);
-    var myOptions = {
+    var location;
+    if (x && y) {
+        location = new google.maps.LatLng(x, y);
+    } else {
+        location = new google.maps.LatLng(homeLat, homeLng);
+    }
+
+    var mapOptions = {
         zoom: defaultZoomLevel,
         center: location,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     }
-    map = new google.maps.Map(document.getElementById("googleMap"), myOptions);
+    map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
 
     google.maps.event.addListener(map, 'click', function (event) {
 
@@ -61,12 +67,12 @@ document.onready = function () {
 
         var icon;
         if (tramBTS.MaSo == maso) {
-            icon = contextPath + '/img/orange.ico';
+            icon = contextPath + '/img/orange.ico?' + staticVersion;
         } else {
             if (tramBTS.TrangThai == 1) {
-                icon = contextPath + '/img/green.ico';
+                icon = contextPath + '/img/green.ico?' + staticVersion;
             } else if (tramBTS.TrangThai == 2) {
-                icon = contextPath + '/img/red.ico';
+                icon = contextPath + '/img/red.ico?' + staticVersion;
             } else {
                 continue;
             }
@@ -101,7 +107,7 @@ document.onready = function () {
                 "      <tr> <th>Trạng thái</th> <td>" + tinhtrangMap[tramBTS.TrangThai] + "</td></tr>  " +
                 "      <tr> <th>Chiều cao</th> <td>" + tramBTS.ChieuCao + "</td></tr>  " +
                 "      <tr> <th>Ghi chú</th> <td>" + tramBTS.GhiChu + "</td></tr>  " +
-                "      <tr> <th>Link</th> <td><a href='" + contextPath + "/?maso=" + tramBTS.MaSo + "'>" + tramBTS.TenTram + "</a></td></tr>  " +
+//                "      <tr> <th>Link</th> <td><a href='" + contextPath + "/?maso=" + tramBTS.MaSo + "'>" + tramBTS.TenTram + "</a></td></tr>  " +
                 "  </tbody>  " +
                 "</table></div>";
         contents[key] = content;
@@ -137,9 +143,9 @@ document.onready = function () {
         })(markers[key], contents[key], infoWindows[key]));
     }
     var mc = new MarkerClusterer(map, markerArray, mcOptions);
-    if (maso) {
-        showMarker(maso);
-    }
+//    if (maso) {
+//        showMarker(maso);
+//    }
 }
 $(function () {
     for (var i = 0; i < tramBTSList.length; i++) {

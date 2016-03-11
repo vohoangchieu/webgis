@@ -10,6 +10,7 @@ package web.gis.config;
  * @author chieuvh
  */
 public class AppConfig {
+    public static String staticVersion="";
     public static String webTitle="";
     public static String contextPath="";
     public static String databaseUrl="";

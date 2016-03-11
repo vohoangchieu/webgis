@@ -44,6 +44,7 @@ public class AppContextListener implements ServletContextListener {
             logger.info(key + " => " + value);
 
         }
+        AppConfig.staticVersion = config.getProperty("staticVersion");
         AppConfig.webTitle = config.getProperty("webTitle");
         AppConfig.databaseUrl = config.getProperty("databaseUrl");
         AppConfig.databaseUser = config.getProperty("databaseUser");

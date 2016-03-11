@@ -8,17 +8,17 @@
         <title>{{webTitle}}</title>
 
         <!-- Bootstrap -->
-        <link href="{{contextPath}}/css/bootstrap.min.css" rel="stylesheet">
-        <link href="{{contextPath}}/css/index.css" rel="stylesheet">
-        <link href="{{contextPath}}/css/jquery-ui.min.css" rel="stylesheet">
-        <link href="{{contextPath}}/css/select2.min.css" rel="stylesheet">
+        <link href="{{contextPath}}/css/bootstrap.min.css?{{staticVersion}}" rel="stylesheet">
+        <link href="{{contextPath}}/css/index.css?{{staticVersion}}" rel="stylesheet">
+        <link href="{{contextPath}}/css/jquery-ui.min.css?{{staticVersion}}" rel="stylesheet">
+        <link href="{{contextPath}}/css/select2.min.css?{{staticVersion}}" rel="stylesheet">
         <!--<script src="http://maps.googleapis.com/maps/api/js"></script>-->
     </head>
     <body>
         <script> var contextPath = '{{contextPath}}';</script>
         <div class="container" style="width: 980px;margin: auto;padding: 0;height: 100%">
             <div class="row" style="height: 100px;text-align: center;border: 1px solid #dfdfdf;">
-                <img src="{{contextPath}}/img/banner.jpg" height="100%" width="100%">
+                <img src="{{contextPath}}/img/banner.jpg?{{staticVersion}}" height="100%" width="100%">
             </div>
             <div class="row" style=";border: 1px solid #dfdfdf;border-bottom: none">
                 <ul class="nav nav-tabs">
@@ -79,8 +79,8 @@
                                 <table class="table table-bordered" style="margin-bottom: 0"> 
 
                                     <tbody> 
-                                        <tr> <td style="margin: auto"><img src="{{contextPath}}/img/green.ico" style="width: 28px;margin: auto"></td><td>Trạm đã xây dựng</td></tr> 
-                                        <tr>   <td style="margin: auto"><img src="{{contextPath}}/img/red.ico" style="width: 28px;margin: auto"></td><td>Trạm trong quy hoạch</td></tr> 
+                                        <tr> <td style="margin: auto"><img src="{{contextPath}}/img/green.ico?{{staticVersion}}" style="width: 28px;margin: auto"></td><td>Trạm đã xây dựng</td></tr> 
+                                        <tr>   <td style="margin: auto"><img src="{{contextPath}}/img/red.ico?{{staticVersion}}" style="width: 28px;margin: auto"></td><td>Trạm trong quy hoạch</td></tr> 
                                     </tbody> 
                                 </table>
                             </div>
@@ -102,17 +102,20 @@
             var homeLat = {{homeLat}};
             var homeLng = {{homeLng}};
             var defaultZoomLevel = {{defaultZoomLevel}};
+            var staticVersion = '{{staticVersion}}';
             var maso = '{{maso}}';
+            var x = '{{x}}';
+            var y = '{{y}}';
                 </script>
-                <script src="{{contextPath}}/js/markerclusterer_compiled.js"></script>
-                <script src="{{contextPath}}/js/jquery.min.js"></script>
-                <script src="{{contextPath}}/js/jquery-ui.min.js"></script>
-                <script src="{{contextPath}}/js/jquery.textcomplete.min.js"></script>
-                <script src="{{contextPath}}/js/jquery.overlay.js"></script>
-                <script src="{{contextPath}}/js/bootstrap.min.js"></script>
-                <script src="{{contextPath}}/js/select2.min.js"></script>
-                <script src="{{contextPath}}/js/common.js"></script>
-                <script src="{{contextPath}}/js/index.js"></script>
+                <script src="{{contextPath}}/js/markerclusterer_compiled.js?{{staticVersion}}"></script>
+                <script src="{{contextPath}}/js/jquery.min.js?{{staticVersion}}"></script>
+                <script src="{{contextPath}}/js/jquery-ui.min.js?{{staticVersion}}"></script>
+                <script src="{{contextPath}}/js/jquery.textcomplete.min.js?{{staticVersion}}"></script>
+                <script src="{{contextPath}}/js/jquery.overlay.js?{{staticVersion}}"></script>
+                <script src="{{contextPath}}/js/bootstrap.min.js?{{staticVersion}}"></script>
+                <script src="{{contextPath}}/js/select2.min.js?{{staticVersion}}"></script>
+                <script src="{{contextPath}}/js/common.js?{{staticVersion}}"></script>
+                <script src="{{contextPath}}/js/index.js?{{staticVersion}}"></script>
             </div>
     </body>
 </html>

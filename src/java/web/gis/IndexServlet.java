@@ -48,12 +48,14 @@ public class IndexServlet extends HttpServlet {
         try {
             GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat(AppConfig.dateFormat);
             Gson gson = gsonBuilder.create();
-            String maso = request.getParameter("maso");
-            if (maso == null) {
-                maso = "";
-            }
+            String maso = Util.getParameter(request, "maso");
+            String x = Util.getParameter(request, "x");
+            String y = Util.getParameter(request, "y");
             TemplateDataDictionary dic = TemplateDictionary.create();
             dic.setVariable("maso", maso);
+            dic.setVariable("x", x);
+            dic.setVariable("y", y);
+            dic.setVariable("staticVersion", AppConfig.staticVersion);
             dic.setVariable("webTitle", AppConfig.webTitle);
             dic.setVariable("contextPath", AppConfig.contextPath);
             dic.setVariable("homeLat", AppConfig.homeLat);
