@@ -4,9 +4,11 @@ var infoWindows = {};
 var contents = {};
 var tramBTSMap = {};
 var globalInfoWindow = null;
-var map;
-document.onready = function () {
-
+var map, poly;
+var markerClusterer;
+var path = new google.maps.MVCArray;
+var pathMarkerArray = [];
+function initMap() {
     var location;
     if (x && y) {
         location = new google.maps.LatLng(x, y);
@@ -23,50 +25,78 @@ document.onready = function () {
         mapTypeId: google.maps.MapTypeId.ROADMAP
     }
     map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
+}
+function initPoly() {
+    poly = new google.maps.Polygon({
+        strokeWeight: 2,
+        fillColor: '#00bfff'
+    });
 
     google.maps.event.addListener(map, 'click', function (event) {
-
-        console.log(event.latLng);
+        if ($("#distance span").hasClass("toolactive")) {
+            if (path.length < 2) {
+                addPoint(event);
+            }
+        }
 
     });
+
+}
+function addPoint(event) {
+    if (path.length == 0) {
+        $("#sourcePoint").text(latLngToString(event.latLng));
+    } else {
+        $("#descPoint").text(latLngToString(event.latLng));
+    }
+    path.insertAt(path.length, event.latLng);
+
+    var marker = new google.maps.Marker({
+        position: event.latLng,
+        map: map,
+        draggable: true,
+    });
+    pathMarkerArray.push(marker);
+    google.maps.event.addListener(marker, 'dragend', function () {
+        for (var i = 0; i < pathMarkerArray.length; ++i) {
+            if (pathMarkerArray[i] == marker) {
+                path.setAt(i, marker.getPosition());
+            }
+        }
+        if (path.length == 1) {
+            $("#sourcePoint").text(pathMarkerArray[0].getPosition().toString());
+        } else if (path.length == 2) {
+            displayDistanceInfo();
+        }
+    });
+    if (path.length > 1) {
+        poly.setPaths(new google.maps.MVCArray([path]));
+        poly.setMap(map);
+        displayDistanceInfo();
+    }
+}
+function displayDistanceInfo() {
+    $("#sourcePoint").text(latLngToString(pathMarkerArray[0].getPosition()));
+    $("#descPoint").text(latLngToString(pathMarkerArray[1].getPosition()));
+    var distance = getDistance(pathMarkerArray[0].getPosition(), pathMarkerArray[1].getPosition());
+    $("#distanceResult").text(distance.toFixed(5).replace(/(\d)(?=(\d{3})+\.)/g, '$1 '));
+}
+document.onready = function () {
+    initMap();
+    initPoly();
+
     map.addListener('center_changed', changeCurrentLink);
     map.addListener('zoom_changed', changeCurrentLink);
     changeCurrentLink();
-    var clusterStyles = [
-        {
-            height: 53,
-            url: "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m1.png",
-            width: 53
-        },
-        {
-            height: 53,
-            url: "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m1.png",
-            width: 53
-        },
-        {
-            height: 53,
-            url: "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m1.png",
-            width: 53
-        },
-        {
-            height: 53,
-            url: "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m1.png",
-            width: 53
-        },
-        {
-            height: 53,
-            url: "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m1.png",
-            width: 53
-        },
-    ];
-    var mcOptions = {
-//        gridSize: 50,
-//        maxZoom: 15,
-        styles: clusterStyles,
-    };
+    initMarkerClusterer();
+//    if (maso) {
+//        showMarker(maso);
+//    }
+}
+function initMarkerClusterer() {
     for (var i = 0; i < tramBTSList.length; i++) {
         var tramBTS = tramBTSList[i];
         var key = tramBTS.MaSo;
+        tramBTS.TenTram1 = replaceUnicode(tramBTS.TenTram).toLowerCase();
         var latLng = new google.maps.LatLng(tramBTS.ToaDoVD,
                 tramBTS.ToaDoKD);
 
@@ -88,7 +118,6 @@ document.onready = function () {
         };
         var marker = new google.maps.Marker({
             position: latLng,
-//            icon: icon, 
             icon: image,
             title: tramBTS.TenTram});
         markers[key] = (marker);
@@ -120,13 +149,6 @@ document.onready = function () {
             content: contents[key]
         });
         infoWindows[key] = (infoWindow);
-//        google.maps.event.addListener(markers[key], 'click', function () {
-//            infoWindows[key].open(map, markers[key]);
-//        })
-    }
-    for (var i = 0; i < tramBTSList.length; i++) {
-        var tramBTS = tramBTSList[i];
-        var key = tramBTS.MaSo;
         google.maps.event.addListener(markers[key], 'click', (function (marker, content, infowindow) {
             return function () {
                 if (globalInfoWindow) {
@@ -136,28 +158,21 @@ document.onready = function () {
                     globalInfoWindow = new google.maps.InfoWindow({
                         content: content
                     });
+                    marker.setMap(map);
                     globalInfoWindow.open(map, marker);
-                }, 400)
-//                globalInfoWindow = new google.maps.InfoWindow({
-//                    content: content
-//                });
-//                globalInfoWindow.open(map, marker);
-//                infowindow.setContent(content);
-//                infowindow.open(map, marker);
+                }, 0)
             };
-        })(markers[key], contents[key], infoWindows[key]));
+        })(markers[key], contents[key],globalInfoWindow /*infoWindows[key]*/));
     }
-    var mc = new MarkerClusterer(map, markerArray, mcOptions);
-//    if (maso) {
-//        showMarker(maso);
-//    }
+    var clusterStyles = getClusterStyles();
+    var mcOptions = {
+//        gridSize: 50,
+//        maxZoom: 15,
+        styles: clusterStyles,
+    };
+    markerClusterer = new MarkerClusterer(map, markerArray, mcOptions);
 }
 $(function () {
-
-    for (var i = 0; i < tramBTSList.length; i++) {
-        var tramBTS = tramBTSList[i];
-        tramBTS.TenTram1 = replaceUnicode(tramBTS.TenTram).toLowerCase();
-    }
     $("#timkiem").click(function () {
         var html = "";
         var tentram = replaceUnicode($("#tentram").val()).toLowerCase();
@@ -190,11 +205,10 @@ $(function () {
                     <td>" + tramBTS.GhiChu + "</td> \n\
                     </tr>";
             }
-            //<tr> <td>#</td><td>Tên trạm</td><td>Ngày lắp đăt</td><td>Điạ chỉ lắp đặt</td><td>Tỉnh thành lắp đặt</td><td>Quận huyện lắp đặt</td><td>Phường xã lắp đặt</td><td>Toạ độ X</td><td>Toạ độ Y</td><td>Trạng thái</td><td>Chiều cao</td><td>Ghi chú</td> </tr>
         }
         $("#search-result-panel tbody").html(html);
     })
-    $("#link").click(function(){
+    $("#link").click(function () {
         selectText("link");
     })
 })
@@ -221,8 +235,8 @@ function showMarker(MaSo) {
     if (map.getZoom() < 11) {
         map.setZoom(11);
         setTimeout(function () {
-//            map.setCenter(markers[MaSo].getPosition());
-            map.panTo(markers[MaSo].getPosition());
+            map.setCenter(markers[MaSo].getPosition());
+//            map.panTo(markers[MaSo].getPosition());
             google.maps.event.trigger(markers[MaSo], 'click');
         }, 250)
     } else {
@@ -260,26 +274,51 @@ $(function () {
     $("#home").click(goHome);
     $("#pan").click(setPan);
     $("#share").click(showLinkShare);
+    $("#distance").click(distanceClick);
 
 });
 
 var rad = function (x) {
     return x * Math.PI / 180;
 };
-var getDistance = function (p1, p2) {
-    var R = 6378137;
-    // Earth’s mean radius in meter
-    var dLat = rad(p2.lat() - p1.lat());
-    var dLong = rad(p2.lng() - p1.lng());
-    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(rad(p1.lat())) * Math.cos(rad(p2.lat())) * Math.sin(dLong / 2) * Math.sin(dLong / 2);
-    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    var d = R * c;
-    return d; // returns the distance in meter 
-};
+function distanceClick() {
+    if ($("#distance span").hasClass("toolactive")) {
+        $("#distance span").removeClass("toolactive");
+        $("#distance-panel").hide();
+        for (var i = 0; i < pathMarkerArray.length; ++i) {
+            pathMarkerArray[i].setMap(null);
+        }
+        poly.setMap(null);
+    } else {
+        $("#distance span").addClass("toolactive");
+        $("#distance-panel").show();
+        for (var i = 0; i < pathMarkerArray.length; ++i) {
+            pathMarkerArray[i].setMap(map);
+        }
+        poly.setMap(map);
+    }
+}
 function changeCurrentLink() {
     var latLng = map.getCenter();
     var currentUrl = requestUrl + "?x=" + latLng.lat() + "&y=" + latLng.lng() + "&zoom=" + map.getZoom();
     $("#link").text(currentUrl);
+}
+
+function getClusterStyles() {
+    var iconMarker = "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m1.png";
+    var clusterStyle = {
+        height: 53,
+        url: iconMarker,
+        width: 53
+    }
+    var clusterStyles = [
+        clusterStyle,
+        clusterStyle,
+        clusterStyle,
+        clusterStyle,
+        clusterStyle,
+    ];
+    return clusterStyles;
 }
 
 

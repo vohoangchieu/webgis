@@ -14,7 +14,7 @@ body{
     color: blue;
     cursor: pointer;
 }
-th{
+th,#distance-panel th{
     font-weight: 500;
 }
 .panel{
@@ -48,4 +48,14 @@ th{
 }
 .row-active{
     color:#46b8da;
+}
+#distance-panel{
+    position: absolute;
+    top: 10px;
+    width: 80%;
+    left: 10%;
+    z-index: 5;
+    background-color: #fff;
+    padding: 5px;
+
 }

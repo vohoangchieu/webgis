@@ -26,7 +26,7 @@
                         <li title="Phóng to bản đồ" role="presentation" id="zoom-in"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true" ></span></li>
                         <li title="Thu nhỏ bản đồ" role="presentation" id="zoom-out"><span class="glyphicon glyphicon-zoom-out" aria-hidden="true" ></span></li>
                         <!--<li role="presentation"><span class="glyphicon glyphicon-info-sign" aria-hidden="true" ></span></li>-->
-                        <li role="presentation"><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span></li>
+                        <li title="Tính khoảng cách" role="presentation" id="distance"><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span></li>
                         <li title="Cho phép di chuyển bản đồ" role="presentation" id="pan" ><span class="glyphicon glyphicon-hand-up toolactive" aria-hidden="true"></span></li>
                         <li title="Hiện liên kết chia sẻ" role="presentation" id="share" ><span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span></li>
                     </ul>
@@ -46,9 +46,9 @@
                             <div class="panel-heading">Tìm kiếm BTS</div>
                             <div class="panel-body">
                                 <form class="form-horizontal" >
-<!--                                    <div class="form-group" >
-                                        <input id="kihieutram" type="text" class="form-control" placeholder="Kí hiệu trạm">
-                                    </div>-->
+                                    <!--                                    <div class="form-group" >
+                                                                            <input id="kihieutram" type="text" class="form-control" placeholder="Kí hiệu trạm">
+                                                                        </div>-->
                                     <div class="form-group" >
                                         <input id="tentram" type="text" class="form-control" placeholder="Tên trạm">
                                     </div>
@@ -93,7 +93,16 @@
                             </div>
                         </div>
                     </div>
-                    <div id="googleMap" class="col-md-9" style="border: 1px solid #dfdfdf;height: 480px">
+                    <div class="col-md-9" style="border: 1px solid #dfdfdf;height: 480px">
+                        <div id="distance-panel" style="display: none">
+                            <table class="table table-bordered" style="border-bottom: none"> 
+                                <thead> <tr> <th>Điểm đầu</th> <th>Điểm cuối</th> <th>Khoảng cách</th> </tr> </thead> 
+                                <tbody> 
+                                    <tr><td id="sourcePoint">Nhấp để chọn</td> <td id="descPoint">Nhấp để chọn</td> <td id="distanceResult"></td> </tr>   
+                                </tbody> 
+                            </table>
+                        </div>
+                        <div id="googleMap" style="border: 1px solid #dfdfdf;height: 480px"></div>
                     </div>
 
                 </div>
