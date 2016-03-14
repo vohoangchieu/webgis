@@ -44,8 +44,9 @@ public class IndexServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        DataAccess dataAccess = null;
         try {
+            dataAccess = new DataAccess(AppConfig.databaseUrl, AppConfig.databaseUser, AppConfig.databasePassword);
             GsonBuilder gsonBuilder = new GsonBuilder().setDateFormat(AppConfig.dateFormat);
             Gson gson = gsonBuilder.create();
             String maso = Util.getParameter(request, "maso");
@@ -63,13 +64,16 @@ public class IndexServlet extends HttpServlet {
             dic.setVariable("contextPath", AppConfig.contextPath);
             dic.setVariable("homeLat", AppConfig.homeLat);
             dic.setVariable("homeLng", AppConfig.homeLng);
-            dic.setVariable("defaultZoomLevel", AppConfig.defaultZoomLevel);
+            dic.setVariable("homeZoomLevel", AppConfig.homeZoomLevel);
+            dic.setVariable("detailZoomLevel", AppConfig.detailZoomLevel);
+            dic.setVariable("markerSize", String.valueOf(AppConfig.markerSize));
             dic.setVariable("requestUrl", requestUrl);
-            DataAccess dataAccess = new DataAccess(AppConfig.databaseUrl, AppConfig.databaseUser, AppConfig.databasePassword);
+            dataAccess.getConnection();
             HashMap<Integer, TinhThanhEntity> tinhThanhMap = dataAccess.getTinhThanhMap();
             HashMap<Integer, QuanHuyenEntity> quanHuyenMap = dataAccess.getQuanHuyenMap();
             HashMap<Integer, PhuongXaEntity> phuongXaMap = dataAccess.getPhuongXaMap();
             List<TramBTSEntity> tramBTSList = dataAccess.getAllTramBTS();
+
             dic.setVariable("tinhThanhMap", gson.toJson(tinhThanhMap));
             dic.setVariable("quanHuyenMap", gson.toJson(quanHuyenMap));
             dic.setVariable("phuongXaMap", gson.toJson(phuongXaMap));
@@ -80,6 +84,10 @@ public class IndexServlet extends HttpServlet {
             outContent(data, response);
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
+        } finally {
+            if (dataAccess != null) {
+                dataAccess.closeConnection();
+            }
         }
 
     }

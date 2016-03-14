@@ -8,6 +8,10 @@ var map, poly;
 var markerClusterer;
 var path = new google.maps.MVCArray;
 var pathMarkerArray = [];
+var currentIcon = {
+    url: contextPath + '/img/cyan.ico?' + staticVersion,
+    scaledSize: new google.maps.Size(markerSize, markerSize)
+}
 function initMap() {
     var location;
     if (x && y) {
@@ -17,7 +21,7 @@ function initMap() {
     }
 
     if (!zoom) {
-        zoom = defaultZoomLevel;
+        zoom = homeZoomLevel;
     }
     var mapOptions = {
         zoom: parseInt(zoom),
@@ -29,7 +33,8 @@ function initMap() {
 function initPoly() {
     poly = new google.maps.Polygon({
         strokeWeight: 2,
-        fillColor: '#00bfff'
+//        fillColor: '#dfdfdf'
+        strokeColor: '#ff80df',
     });
 
     google.maps.event.addListener(map, 'click', function (event) {
@@ -49,11 +54,16 @@ function addPoint(event) {
         $("#descPoint").text(latLngToString(event.latLng));
     }
     path.insertAt(path.length, event.latLng);
-
+    var icon = contextPath + '/img/distance-marker.png';
+    var image = {
+        url: icon,
+//        scaledSize: new google.maps.Size(28, 28)
+    };
     var marker = new google.maps.Marker({
         position: event.latLng,
         map: map,
         draggable: true,
+        icon: image
     });
     pathMarkerArray.push(marker);
     google.maps.event.addListener(marker, 'dragend', function () {
@@ -80,7 +90,16 @@ function displayDistanceInfo() {
     var distance = getDistance(pathMarkerArray[0].getPosition(), pathMarkerArray[1].getPosition());
     $("#distanceResult").text(distance.toFixed(5).replace(/(\d)(?=(\d{3})+\.)/g, '$1 '));
 }
+function initSize() {
+    var contentHeight = $(window).height() - $("#row-banner").outerHeight() - $("#row-nav").outerHeight() - 8;
+    $("#row-content").height(contentHeight);
+    $("#googleMap").height(contentHeight);
+    var searchResultPanelHeight = contentHeight - $("#search-panel").height() - $("#note-panel").height();
+    $("#search-result-panel").height(searchResultPanelHeight - 40);
+    $("#search-result-panel panel-body").height(searchResultPanelHeight - 73);
+}
 document.onready = function () {
+    initSize();
     initMap();
     initPoly();
 
@@ -100,26 +119,28 @@ function initMarkerClusterer() {
         var latLng = new google.maps.LatLng(tramBTS.ToaDoVD,
                 tramBTS.ToaDoKD);
 
-        var icon;
+        var image;
         if (tramBTS.MaSo == maso) {
-            icon = contextPath + '/img/orange.ico?' + staticVersion;
+            image = contextPath + '/img/orange.ico?' + staticVersion;
         } else {
             if (tramBTS.TrangThai == 1) {
-                icon = contextPath + '/img/green.ico?' + staticVersion;
+                image = contextPath + '/img/green.ico?' + staticVersion;
             } else if (tramBTS.TrangThai == 2) {
-                icon = contextPath + '/img/red.ico?' + staticVersion;
+                image = contextPath + '/img/red.ico?' + staticVersion;
             } else {
                 continue;
             }
         }
-        var image = {
-            url: icon,
-            scaledSize: new google.maps.Size(28, 28)
+        var icon = {
+            url: image,
+            scaledSize: new google.maps.Size(markerSize, markerSize)
         };
+        tramBTS.icon = icon;
         var marker = new google.maps.Marker({
             position: latLng,
             icon: image,
             title: tramBTS.TenTram});
+        tramBTS.marker = marker;
         markers[key] = (marker);
         markerArray.push(marker);
 //        markers[i]=marker;
@@ -162,7 +183,7 @@ function initMarkerClusterer() {
                     globalInfoWindow.open(map, marker);
                 }, 0)
             };
-        })(markers[key], contents[key],globalInfoWindow /*infoWindows[key]*/));
+        })(markers[key], contents[key], globalInfoWindow /*infoWindows[key]*/));
     }
     var clusterStyles = getClusterStyles();
     var mcOptions = {
@@ -179,6 +200,7 @@ $(function () {
         var kihieutram = $("#kihieutram").val();
         var toadox = $("#toadox").val();
         var toadoy = $("#toadoy").val();
+        var count = 0;
         for (var i = 0; i < tramBTSList.length; i++) {
             var tramBTS = tramBTSList[i];
             if (tramBTS.ToaDoVD <= 0 || tramBTS.ToaDoKD <= 0) {
@@ -190,6 +212,7 @@ $(function () {
                     (toadox && toadox == tramBTS.ToaDoVD) ||
                     (toadoy && toadoy == tramBTS.ToaDoKD)
                     ) {
+                count++;
                 html += "<tr id='row-" + tramBTS.MaSo + "' onclick='handleSearchResultRowClick(" + tramBTS.MaSo + ")'> \n\
                     <td>" + tramBTS.MaSo + "</td>\n\
                     <td>" + tramBTS.TenTram + "</td>\n\
@@ -205,6 +228,9 @@ $(function () {
                     <td>" + tramBTS.GhiChu + "</td> \n\
                     </tr>";
             }
+        }
+        if (count == 0) {
+            resetMarkerIcon();
         }
         $("#search-result-panel tbody").html(html);
     })
@@ -229,16 +255,25 @@ function zoomOut() {
 function goHome() {
     var location = new google.maps.LatLng(homeLat, homeLng);
     map.setCenter(location);
-    map.setZoom(defaultZoomLevel);
+    map.setZoom(homeZoomLevel);
 }
 function showMarker(MaSo) {
-    if (map.getZoom() < 11) {
-        map.setZoom(11);
+    for (var i = 0; i < tramBTSList.length; i++) {
+        var tramBTS = tramBTSList[i];
+        if (tramBTS.MaSo == MaSo) {
+            tramBTS.marker.setIcon(currentIcon);
+        } else {
+            tramBTS.marker.setIcon(tramBTS.icon);
+        }
+    }
+
+    if (map.getZoom() < detailZoomLevel) {
+        map.setZoom(detailZoomLevel);
         setTimeout(function () {
-            map.setCenter(markers[MaSo].getPosition());
-//            map.panTo(markers[MaSo].getPosition());
+//            map.setCenter(markers[MaSo].getPosition());
+            map.panTo(markers[MaSo].getPosition());
             google.maps.event.trigger(markers[MaSo], 'click');
-        }, 250)
+        }, 1000)
     } else {
 //        map.setCenter(markers[MaSo].getPosition());
         map.panTo(markers[MaSo].getPosition());
@@ -272,7 +307,7 @@ $(function () {
     $("#zoom-in").click(zoomIn);
     $("#zoom-out").click(zoomOut);
     $("#home").click(goHome);
-    $("#pan").click(setPan);
+//    $("#pan").click(setPan);
     $("#share").click(showLinkShare);
     $("#distance").click(distanceClick);
 
@@ -319,6 +354,12 @@ function getClusterStyles() {
         clusterStyle,
     ];
     return clusterStyles;
+}
+function resetMarkerIcon() {
+    for (var i = 0; i < tramBTSList.length; i++) {
+        var tramBTS = tramBTSList[i];
+        tramBTS.marker.setIcon(tramBTS.icon);
+    }
 }
 
 

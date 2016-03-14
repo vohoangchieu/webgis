@@ -2,6 +2,9 @@ body{
     width: 980px;
     margin: auto;
 }
+.nav-tabs{
+    border: none;
+}
 .nav-tabs li{
     padding: 5px;
 }
@@ -46,6 +49,13 @@ th,#distance-panel th{
 #search-result-panel tr:nth-child(even) {
     background: #EEFFF7
 }
+#search-result-panel th{
+    font-weight: 600;
+}
+#search-result-panel th,#search-result-panel td{
+    padding: 2px;
+    font-size: 13px;
+}
 .row-active{
     color:#46b8da;
 }
@@ -59,3 +69,14 @@ th,#distance-panel th{
     padding: 5px;
 
 }
+#hide-left-panel{
+    position: absolute;
+    top: 0;
+    right: -5px;
+    z-index: 5;
+}
+.glyphicon-fast-backward{
+    font-size: 13px;
+    margin-right: 0;
+}
+

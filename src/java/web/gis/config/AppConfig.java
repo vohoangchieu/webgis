@@ -10,15 +10,18 @@ package web.gis.config;
  * @author chieuvh
  */
 public class AppConfig {
-    public static String staticVersion="";
-    public static String webTitle="";
-    public static String contextPath="";
-    public static String databaseUrl="";
-    public static String databaseUser="";
-    public static String databasePassword="";
-    public static String tinhtrangMap="";
-    public static String homeLat="";
-    public static String homeLng="";
-    public static String defaultZoomLevel="";
-    public static String dateFormat="";
+
+    public static String staticVersion = "";
+    public static String webTitle = "";
+    public static String contextPath = "";
+    public static String databaseUrl = "";
+    public static String databaseUser = "";
+    public static String databasePassword = "";
+    public static String tinhtrangMap = "";
+    public static String homeLat = "";
+    public static String homeLng = "";
+    public static String homeZoomLevel = "";
+    public static String detailZoomLevel = "";
+    public static String dateFormat = "";
+    public static int markerSize = 0;
 }

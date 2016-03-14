@@ -11,23 +11,41 @@
         <link href="{{contextPath}}/css/bootstrap.min.css?{{staticVersion}}" rel="stylesheet">
         <link href="{{contextPath}}/css/index.css?{{staticVersion}}" rel="stylesheet">
         <link href="{{contextPath}}/css/jquery-ui.min.css?{{staticVersion}}" rel="stylesheet">
-        <link href="{{contextPath}}/css/select2.min.css?{{staticVersion}}" rel="stylesheet">
+        <!--<link href="{{contextPath}}/css/select2.min.css?{{staticVersion}}" rel="stylesheet">-->
     </head>
     <body>
-        <script> var contextPath = '{{contextPath}}';</script>
+        <script>
+            var contextPath = '{{contextPath}}';
+            var tinhThanhMap = {{tinhThanhMap}};
+            var quanHuyenMap = {{quanHuyenMap}};
+            var phuongXaMap = {{phuongXaMap}};
+            var tramBTSList = {{tramBTSList}};
+            var tinhtrangMap = {{tinhtrangMap}};
+            var homeLat = {{homeLat}};
+            var homeLng = {{homeLng}};
+            var homeZoomLevel = {{homeZoomLevel}};
+            var detailZoomLevel = {{detailZoomLevel}};
+            var markerSize = {{markerSize}};
+            var staticVersion = '{{staticVersion}}';
+            var maso = '{{maso}}';
+            var x = '{{x}}';
+            var y = '{{y}}';
+            var zoom = '{{zoom}}';
+            var requestUrl = '{{requestUrl}}';
+        </script>
         <div class="container" style="width: 980px;margin: auto;padding: 0;height: 100%">
-            <div class="row" style="height: 100px;text-align: center;border: 1px solid #dfdfdf;">
+            <div class="row" style="height: 100px;text-align: center;border: 1px solid #dfdfdf;" id="row-banner">
                 <img src="{{contextPath}}/img/banner.jpg?{{staticVersion}}" height="100%" width="100%">
             </div>
-            <div class="row" style=";border: 1px solid #dfdfdf;border-bottom: none">
+            <div class="row" style=";border-left: 1px solid #dfdfdf;border-right: 1px solid #dfdfdf;" id="row-nav">
                 <div  class="col-md-4">
                     <ul class="nav nav-tabs">
-                        <li title="Về địa điểm mặc định" role="presentation" id="home"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></li>
+                        <li title="Xem toàn tỉnh An Giang" role="presentation" id="home"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></li>
                         <li title="Phóng to bản đồ" role="presentation" id="zoom-in"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true" ></span></li>
                         <li title="Thu nhỏ bản đồ" role="presentation" id="zoom-out"><span class="glyphicon glyphicon-zoom-out" aria-hidden="true" ></span></li>
                         <!--<li role="presentation"><span class="glyphicon glyphicon-info-sign" aria-hidden="true" ></span></li>-->
                         <li title="Tính khoảng cách" role="presentation" id="distance"><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span></li>
-                        <li title="Cho phép di chuyển bản đồ" role="presentation" id="pan" ><span class="glyphicon glyphicon-hand-up toolactive" aria-hidden="true"></span></li>
+                        <li title="Cho phép di chuyển bản đồ" role="presentation" id="pan" ><span class="glyphicon glyphicon-hand-up " aria-hidden="true"></span></li>
                         <li title="Hiện liên kết chia sẻ" role="presentation" id="share" ><span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span></li>
                     </ul>
                 </div>
@@ -37,11 +55,11 @@
                     </div>
                 </div>
             </div>
-            <div class="row" style="border: 1px solid #dfdfdf;border-top: none">
+            <div class="row" style="border: 1px solid #dfdfdf;border-top: none;border-bottom: none" id="row-content">
 
                 <div class="row" >
-                    <div id=left-panel" class="col-md-3" style="border: 1px solid #dfdfdf;height: 100%;border-bottom: none">
-
+                    <div id=left-panel" class="col-md-3" style="border: 1px solid #dfdfdf;height: 100%;border-bottom: none;border-left: none">
+                        <!--<div id="hide-left-panel"><span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span></div>-->
                         <div class="panel panel-info" id="search-panel">
                             <div class="panel-heading">Tìm kiếm BTS</div>
                             <div class="panel-body">
@@ -70,8 +88,8 @@
                         </div>
                         <div class="panel panel-info" id="search-result-panel">
                             <div class="panel-heading">Kết quả tìm kiếm BTS</div>
-                            <div class="panel-body" style="width:100%;height: 100px;overflow: scroll">
-                                <table class="table table-bordered" style="width: 960px"> 
+                            <div class="panel-body" style="overflow: scroll;height: 150px">
+                                <table class="table table-bordered"> 
                                     <thead> 
                                         <tr> <th>#</th><th>Tên trạm</th><th>Ngày lắp đăt</th><th>Điạ chỉ lắp đặt</th><th>Tỉnh thành lắp đặt</th><th>Quận huyện lắp đặt</th><th>Phường xã lắp đặt</th><th>Toạ độ X</th><th>Toạ độ Y</th><th>Trạng thái</th><th>Chiều cao</th><th>Ghi chú</th> </tr>
                                     </thead> 
@@ -80,7 +98,7 @@
                                 </table>
                             </div>
                         </div>
-                        <div class="panel panel-info">
+                        <div class="panel panel-info" id="note-panel">
                             <div class="panel-heading">Chú thích</div>
                             <div class="panel-body" >
                                 <table class="table table-bordered" style="margin-bottom: 0"> 
@@ -93,47 +111,33 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-9" style="border: 1px solid #dfdfdf;height: 480px">
+                    <div id=right-panel" class="col-md-9" >
                         <div id="distance-panel" style="display: none">
-                            <table class="table table-bordered" style="border-bottom: none"> 
-                                <thead> <tr> <th>Điểm đầu</th> <th>Điểm cuối</th> <th>Khoảng cách</th> </tr> </thead> 
+                            <table class="table table-bordered" style="border-bottom: none;margin-bottom: 0"> 
+                                <thead> <tr> <th>Điểm đầu</th> <th>Điểm cuối</th> <th>Khoảng cách (m)</th> </tr> </thead> 
                                 <tbody> 
                                     <tr><td id="sourcePoint">Nhấp để chọn</td> <td id="descPoint">Nhấp để chọn</td> <td id="distanceResult"></td> </tr>   
                                 </tbody> 
                             </table>
                         </div>
-                        <div id="googleMap" style="border: 1px solid #dfdfdf;height: 480px"></div>
+                        <div id="googleMap" style="border: 1px solid #dfdfdf;"></div>
                     </div>
-
                 </div>
 
-                <script type="text/javascript" 
-                src="http://maps.googleapis.com/maps/api/js?key=AIzaSyByc8l-aogtJC0sXXt33SBbjvHC6KbBZ0Y&libraries=drawing"></script>
-                <script>
-            var tinhThanhMap = {{tinhThanhMap}};
-            var quanHuyenMap = {{quanHuyenMap}};
-            var phuongXaMap = {{phuongXaMap}};
-            var tramBTSList = {{tramBTSList}};
-            var tinhtrangMap = {{tinhtrangMap}};
-            var homeLat = {{homeLat}};
-            var homeLng = {{homeLng}};
-            var defaultZoomLevel = {{defaultZoomLevel}};
-            var staticVersion = '{{staticVersion}}';
-            var maso = '{{maso}}';
-            var x = '{{x}}';
-            var y = '{{y}}';
-            var zoom = '{{zoom}}';
-            var requestUrl = '{{requestUrl}}';
-                </script>
-                <script src="{{contextPath}}/js/markerclusterer_compiled.js?{{staticVersion}}"></script>
-                <script src="{{contextPath}}/js/jquery.min.js?{{staticVersion}}"></script>
-                <script src="{{contextPath}}/js/jquery-ui.min.js?{{staticVersion}}"></script>
-                <script src="{{contextPath}}/js/jquery.textcomplete.min.js?{{staticVersion}}"></script>
-                <script src="{{contextPath}}/js/jquery.overlay.js?{{staticVersion}}"></script>
-                <script src="{{contextPath}}/js/bootstrap.min.js?{{staticVersion}}"></script>
-                <script src="{{contextPath}}/js/select2.min.js?{{staticVersion}}"></script>
-                <script src="{{contextPath}}/js/common.js?{{staticVersion}}"></script>
-                <script src="{{contextPath}}/js/index.js?{{staticVersion}}"></script>
             </div>
+
+            <script type="text/javascript" 
+            src="http://maps.googleapis.com/maps/api/js?key=AIzaSyByc8l-aogtJC0sXXt33SBbjvHC6KbBZ0Y&libraries=drawing"></script>
+
+            <script src="{{contextPath}}/js/markerclusterer_compiled.js?{{staticVersion}}"></script>
+            <script src="{{contextPath}}/js/jquery.min.js?{{staticVersion}}"></script>
+            <script src="{{contextPath}}/js/jquery-ui.min.js?{{staticVersion}}"></script>
+            <!--<script src="{{contextPath}}/js/jquery.textcomplete.min.js?{{staticVersion}}"></script>-->
+            <!--<script src="{{contextPath}}/js/jquery.overlay.js?{{staticVersion}}"></script>-->
+            <script src="{{contextPath}}/js/bootstrap.min.js?{{staticVersion}}"></script>
+            <!--<script src="{{contextPath}}/js/select2.min.js?{{staticVersion}}"></script>-->
+            <script src="{{contextPath}}/js/common.js?{{staticVersion}}"></script>
+            <script src="{{contextPath}}/js/index.js?{{staticVersion}}"></script>
+        </div>
     </body>
 </html>

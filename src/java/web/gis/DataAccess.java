@@ -49,7 +49,7 @@ public class DataAccess {
 
     }
 
-    private void getConnection() throws ClassNotFoundException, SQLException {
+    public void getConnection() throws ClassNotFoundException, SQLException {
         String JDBC_DRIVER = "com.mysql.jdbc.Driver";
 
         Class.forName(JDBC_DRIVER);
@@ -57,7 +57,7 @@ public class DataAccess {
         conn = DriverManager.getConnection(url, user, pass);
     }
 
-    private void closeConnection() {
+    public void closeConnection() {
         try {
             if (conn != null && conn.isClosed() == false) {
                 conn.close();
@@ -86,7 +86,7 @@ public class DataAccess {
         } catch (ClassNotFoundException cnfex) {
             logger.error(cnfex.getMessage(), cnfex);
         } finally {
-            closeConnection();
+//            closeConnection();
         }
         return result;
     }
@@ -110,7 +110,7 @@ public class DataAccess {
         } catch (ClassNotFoundException cnfex) {
             logger.error(cnfex.getMessage(), cnfex);
         } finally {
-            closeConnection();
+//            closeConnection();
         }
         return result;
     }
@@ -134,7 +134,7 @@ public class DataAccess {
         } catch (ClassNotFoundException cnfex) {
             logger.error(cnfex.getMessage(), cnfex);
         } finally {
-            closeConnection();
+//            closeConnection();
         }
         return result;
     }
@@ -214,7 +214,7 @@ public class DataAccess {
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
         } finally {
-            closeConnection();
+//            closeConnection();
         }
         return row;
     }
@@ -264,7 +264,7 @@ public class DataAccess {
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
         } finally {
-            closeConnection();
+//            closeConnection();
         }
         return result;
     }
@@ -283,7 +283,7 @@ public class DataAccess {
         } catch (ClassNotFoundException cnfex) {
             logger.error(cnfex.getMessage(), cnfex);
         } finally {
-            closeConnection();
+//            closeConnection();
         }
         return row;
     }
