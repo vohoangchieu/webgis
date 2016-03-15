@@ -24,4 +24,5 @@ public class AppConfig {
     public static String detailZoomLevel = "";
     public static String dateFormat = "";
     public static int markerSize = 0;
+    public static boolean useCluster = false;
 }

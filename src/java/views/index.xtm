@@ -16,6 +16,7 @@
     <body>
         <script>
             var contextPath = '{{contextPath}}';
+            var useCluster = {{useCluster}};
             var tinhThanhMap = {{tinhThanhMap}};
             var quanHuyenMap = {{quanHuyenMap}};
             var phuongXaMap = {{phuongXaMap}};
@@ -33,12 +34,12 @@
             var zoom = '{{zoom}}';
             var requestUrl = '{{requestUrl}}';
         </script>
-        <div class="container" style="width: 980px;margin: auto;padding: 0;height: 100%">
+        <div class="container" style="width: 100%;margin: auto;padding: 0;height: 95%">
             <div class="row" style="height: 100px;text-align: center;border: 1px solid #dfdfdf;" id="row-banner">
                 <img src="{{contextPath}}/img/banner.jpg?{{staticVersion}}" height="100%" width="100%">
             </div>
             <div class="row" style=";border-left: 1px solid #dfdfdf;border-right: 1px solid #dfdfdf;" id="row-nav">
-                <div  class="col-md-4">
+                <div  class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
                     <ul class="nav nav-tabs">
                         <li title="Xem toàn tỉnh An Giang" role="presentation" id="home"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></li>
                         <li title="Phóng to bản đồ" role="presentation" id="zoom-in"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true" ></span></li>
@@ -49,80 +50,82 @@
                         <li title="Hiện liên kết chia sẻ" role="presentation" id="share" ><span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span></li>
                     </ul>
                 </div>
-                <div  class="col-md-8">
+                <div  class="col-md-8 col-sm-8 col-lg-8 col-xs-8">
                     <div style="padding-top: 5px;" >
                         <span id="link" style="font-size: 12px;color: #31b0d5;display: none;float: right"></span>
                     </div>
                 </div>
             </div>
             <div class="row" style="border: 1px solid #dfdfdf;border-top: none;border-bottom: none" id="row-content">
+                <div id="show-left-panel"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></div>
+                <div id=left-panel" class="col-md-3 col-sm-3 col-lg-3 col-xs-3" style="border: 1px solid #dfdfdf;height: 100%;border-bottom: none;border-left: none">
+                    <div id="hide-left-panel"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></div>
+                    <div class="panel panel-info" id="search-panel">
+                        <div class="panel-heading">Tìm kiếm BTS</div>
+                        <div class="panel-body">
+                            <form class="form-horizontal" >
+                                <!--                                    <div class="form-group" >
+                                                                        <input id="kihieutram" type="text" class="form-control" placeholder="Kí hiệu trạm">
+                                                                    </div>-->
+                                <div class="form-group" >
+                                    <input id="tentram" type="text" class="form-control" placeholder="Tên trạm">
+                                </div>
 
-                <div class="row" >
-                    <div id=left-panel" class="col-md-3" style="border: 1px solid #dfdfdf;height: 100%;border-bottom: none;border-left: none">
-                        <!--<div id="hide-left-panel"><span class="glyphicon glyphicon-fast-backward" aria-hidden="true"></span></div>-->
-                        <div class="panel panel-info" id="search-panel">
-                            <div class="panel-heading">Tìm kiếm BTS</div>
-                            <div class="panel-body">
-                                <form class="form-horizontal" >
-                                    <!--                                    <div class="form-group" >
-                                                                            <input id="kihieutram" type="text" class="form-control" placeholder="Kí hiệu trạm">
-                                                                        </div>-->
-                                    <div class="form-group" >
-                                        <input id="tentram" type="text" class="form-control" placeholder="Tên trạm">
-                                    </div>
+                                <div class="form-group" >
+                                    <label class="sr-only" for="toadox">Tọa độ X</label>
+                                    <input id="toadox" type="text" class="form-control" placeholder="Tọa độ X">
+                                </div>
+                                <div class="form-group" >
+                                    <label class="sr-only" for="toadoy">Tọa độ Y</label>
+                                    <input id="toadoy" type="text" class="form-control" placeholder="Tọa độ Y">
+                                </div>
+                                <div class="form-group" >
+                                    <input class="btn btn-info" type="button" value="Tìm kiếm" id="timkiem">
+                                </div>
 
-                                    <div class="form-group" >
-                                        <label class="sr-only" for="toadox">Tọa độ X</label>
-                                        <input id="toadox" type="text" class="form-control" placeholder="Tọa độ X">
-                                    </div>
-                                    <div class="form-group" >
-                                        <label class="sr-only" for="toadoy">Tọa độ Y</label>
-                                        <input id="toadoy" type="text" class="form-control" placeholder="Tọa độ Y">
-                                    </div>
-                                    <div class="form-group" >
-                                        <input class="btn btn-info" type="button" value="Tìm kiếm" id="timkiem">
-                                    </div>
-
-                                </form>
-                            </div>
-                        </div>
-                        <div class="panel panel-info" id="search-result-panel">
-                            <div class="panel-heading">Kết quả tìm kiếm BTS</div>
-                            <div class="panel-body" style="overflow: scroll;height: 150px">
-                                <table class="table table-bordered"> 
-                                    <thead> 
-                                        <tr> <th>#</th><th>Tên trạm</th><th>Ngày lắp đăt</th><th>Điạ chỉ lắp đặt</th><th>Tỉnh thành lắp đặt</th><th>Quận huyện lắp đặt</th><th>Phường xã lắp đặt</th><th>Toạ độ X</th><th>Toạ độ Y</th><th>Trạng thái</th><th>Chiều cao</th><th>Ghi chú</th> </tr>
-                                    </thead> 
-                                    <tbody> 
-                                    </tbody> 
-                                </table>
-                            </div>
-                        </div>
-                        <div class="panel panel-info" id="note-panel">
-                            <div class="panel-heading">Chú thích</div>
-                            <div class="panel-body" >
-                                <table class="table table-bordered" style="margin-bottom: 0"> 
-
-                                    <tbody> 
-                                        <tr> <td style="margin: auto"><img src="{{contextPath}}/img/green.ico?{{staticVersion}}" style="width: 28px;margin: auto"></td><td>Trạm đã xây dựng</td></tr> 
-                                        <tr>   <td style="margin: auto"><img src="{{contextPath}}/img/red.ico?{{staticVersion}}" style="width: 28px;margin: auto"></td><td>Trạm trong quy hoạch</td></tr> 
-                                    </tbody> 
-                                </table>
-                            </div>
+                            </form>
                         </div>
                     </div>
-                    <div id=right-panel" class="col-md-9" >
-                        <div id="distance-panel" style="display: none">
-                            <table class="table table-bordered" style="border-bottom: none;margin-bottom: 0"> 
-                                <thead> <tr> <th>Điểm đầu</th> <th>Điểm cuối</th> <th>Khoảng cách (m)</th> </tr> </thead> 
+                    <div class="panel panel-info" id="search-result-panel">
+                        <div class="panel-heading">Kết quả tìm kiếm BTS</div>
+                        <div class="panel-body" style="overflow: scroll;height: 150px">
+                            <table class="table table-bordered"> 
+                                <thead> 
+                                    <tr> <th>#</th><th>Tên trạm</th><th>Ngày lắp đăt</th><th>Điạ chỉ lắp đặt</th><th>Tỉnh thành lắp đặt</th><th>Quận huyện lắp đặt</th><th>Phường xã lắp đặt</th><th>Toạ độ X</th><th>Toạ độ Y</th><th>Trạng thái</th><th>Chiều cao</th><th>Ghi chú</th> </tr>
+                                </thead> 
                                 <tbody> 
-                                    <tr><td id="sourcePoint">Nhấp để chọn</td> <td id="descPoint">Nhấp để chọn</td> <td id="distanceResult"></td> </tr>   
                                 </tbody> 
                             </table>
                         </div>
-                        <div id="googleMap" style="border: 1px solid #dfdfdf;"></div>
+                    </div>
+                    <div class="panel panel-info" id="note-panel">
+                        <div class="panel-heading">Chú thích</div>
+                        <div class="panel-body" >
+                            <table class="table table-bordered" style="margin-bottom: 0"> 
+
+                                <tbody> 
+                                    <tr> <td style="margin: auto"><img src="{{contextPath}}/img/green.ico?{{staticVersion}}" style="width: 28px;margin: auto"></td><td>Trạm đã xây dựng</td></tr> 
+                                    <tr>   <td style="margin: auto"><img src="{{contextPath}}/img/red.ico?{{staticVersion}}" style="width: 28px;margin: auto"></td><td>Trạm trong quy hoạch</td></tr> 
+                                </tbody> 
+                            </table>
+                        </div>
                     </div>
                 </div>
+                <div id=right-panel" class="col-md-9 col-sm-9 col-lg-9 col-xs-9" >
+                    <!--                        <div id="distance-panel" style="display: none">
+                                                <table class="table table-bordered" style="border-bottom: none;margin-bottom: 0"> 
+                                                    <thead> <tr> <th>Điểm đầu</th> <th>Điểm cuối</th> <th>Khoảng cách (m)</th> </tr> </thead> 
+                                                    <tbody> 
+                                                        <tr><td id="sourcePoint">Nhấp để chọn</td> <td id="descPoint">Nhấp để chọn</td> <td id="distanceResult"></td> </tr>   
+                                                    </tbody> 
+                                                </table>
+                                            </div>-->
+                    <div id="distance-div" style="display: none">
+                        Khoảng cách (m):  <span id="distanceResult">123 456</span><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </div>
+                    <div id="googleMap" style="border: 1px solid #dfdfdf;"></div>
+                </div>
+                <div style="clear: both"></div>
 
             </div>
 

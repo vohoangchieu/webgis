@@ -46,6 +46,15 @@ function initPoly() {
 
     });
 
+    $("#distance-div .glyphicon-remove").click(function () {
+        $("#distance-div").hide();
+        poly.setMap(null);
+        for (var i = 0; i < pathMarkerArray.length; i++) {
+            pathMarkerArray[i].setMap(null);
+        }
+        pathMarkerArray = [];
+        path.clear();
+    })
 }
 function addPoint(event) {
     if (path.length == 0) {
@@ -54,7 +63,7 @@ function addPoint(event) {
         $("#descPoint").text(latLngToString(event.latLng));
     }
     path.insertAt(path.length, event.latLng);
-    var icon = contextPath + '/img/distance-marker.png';
+    var icon = contextPath + '/img/circle-red.png';
     var image = {
         url: icon,
 //        scaledSize: new google.maps.Size(28, 28)
@@ -88,9 +97,12 @@ function displayDistanceInfo() {
     $("#sourcePoint").text(latLngToString(pathMarkerArray[0].getPosition()));
     $("#descPoint").text(latLngToString(pathMarkerArray[1].getPosition()));
     var distance = getDistance(pathMarkerArray[0].getPosition(), pathMarkerArray[1].getPosition());
-    $("#distanceResult").text(distance.toFixed(5).replace(/(\d)(?=(\d{3})+\.)/g, '$1 '));
+    $("#distanceResult").text(distance.toFixed(5).replace(/(\d)(?=(\d{3})+\.)/g, '$1 ').replace(".", ",").replace(" ", "."));
+    $("#distance-div").show();
 }
 function initSize() {
+    var contentTop = $("#row-banner").outerHeight() + $("#row-nav").outerHeight() + 8;
+    $("#show-left-panel").css({top: contentTop});
     var contentHeight = $(window).height() - $("#row-banner").outerHeight() - $("#row-nav").outerHeight() - 8;
     $("#row-content").height(contentHeight);
     $("#googleMap").height(contentHeight);
@@ -140,6 +152,9 @@ function initMarkerClusterer() {
             position: latLng,
             icon: image,
             title: tramBTS.TenTram});
+        if (!useCluster) {
+            marker.setMap(map);
+        }
         tramBTS.marker = marker;
         markers[key] = (marker);
         markerArray.push(marker);
@@ -191,7 +206,10 @@ function initMarkerClusterer() {
 //        maxZoom: 15,
         styles: clusterStyles,
     };
-    markerClusterer = new MarkerClusterer(map, markerArray, mcOptions);
+    if (useCluster) {
+        markerClusterer = new MarkerClusterer(map, markerArray, mcOptions);
+    }
+//    markerClusterer = new MarkerClusterer(map, markerArray, mcOptions);
 }
 $(function () {
     $("#timkiem").click(function () {
@@ -340,11 +358,13 @@ function changeCurrentLink() {
 }
 
 function getClusterStyles() {
-    var iconMarker = "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m1.png";
+//    var iconMarker = "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m1.png";
+    var iconMarker = contextPath + '/img/cluster.png?' + staticVersion;
+    ;
     var clusterStyle = {
-        height: 53,
+        height: 32,
         url: iconMarker,
-        width: 53
+        width: 32
     }
     var clusterStyles = [
         clusterStyle,

@@ -54,6 +54,7 @@ public class AppContextListener implements ServletContextListener {
         AppConfig.detailZoomLevel = config.getProperty("detailZoomLevel");
         AppConfig.dateFormat = config.getProperty("dateFormat");
         AppConfig.markerSize = Integer.parseInt(config.getProperty("markerSize"));
+        AppConfig.useCluster = "1".equals(config.getProperty("useCluster"));
         String OPENSHIFT_MYSQL_DB_HOST = System.getenv("OPENSHIFT_MYSQL_DB_HOST");
         if (OPENSHIFT_MYSQL_DB_HOST != null) {
             String OPENSHIFT_MYSQL_DB_PORT = System.getenv("OPENSHIFT_MYSQL_DB_PORT");

@@ -67,6 +67,7 @@ public class IndexServlet extends HttpServlet {
             dic.setVariable("homeZoomLevel", AppConfig.homeZoomLevel);
             dic.setVariable("detailZoomLevel", AppConfig.detailZoomLevel);
             dic.setVariable("markerSize", String.valueOf(AppConfig.markerSize));
+            dic.setVariable("useCluster", String.valueOf(AppConfig.useCluster));
             dic.setVariable("requestUrl", requestUrl);
             dataAccess.getConnection();
             HashMap<Integer, TinhThanhEntity> tinhThanhMap = dataAccess.getTinhThanhMap();
