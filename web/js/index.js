@@ -8,6 +8,9 @@ var map, poly;
 var markerClusterer;
 var path = new google.maps.MVCArray;
 var pathMarkerArray = [];
+var isDrawing = false;
+var drawingManager = null;
+var polyline = null;
 var currentIcon = {
     url: contextPath + '/img/cyan.ico?' + staticVersion,
     scaledSize: new google.maps.Size(markerSize, markerSize)
@@ -31,78 +34,60 @@ function initMap() {
     map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
 }
 function initPoly() {
-    poly = new google.maps.Polygon({
-        strokeWeight: 2,
-//        fillColor: '#dfdfdf'
-        strokeColor: '#ff80df',
-    });
-
-    google.maps.event.addListener(map, 'click', function (event) {
-        if ($("#distance span").hasClass("toolactive")) {
-            if (path.length < 2) {
-                addPoint(event);
-            }
+    drawingManager = new google.maps.drawing.DrawingManager({
+        drawingControl: false,
+        drawingMode: google.maps.drawing.OverlayType.POLYLINE,
+        drawingControlOptions: {
+            position: google.maps.ControlPosition.TOP_CENTER,
+            drawingModes: [
+                google.maps.drawing.OverlayType.POLYLINE,
+            ]
+        },
+        polylineOptions: {
+            strokeColor: '#ff80df',
+            zIndex: 6
         }
-
     });
-
+//    drawingManager.setMap(map);
+    google.maps.event.addListener(drawingManager, 'polylinecomplete', function (event) {
+        polyline = event;
+        var latLngArray = (event.getPath().getArray());
+        var distance = 0; //getDistance(latLngArray[0], latLngArray[1]);
+        for (var i = 0; i < latLngArray.length - 1; i++) {
+            distance += getDistance(latLngArray[i], latLngArray[i + 1]);
+        }
+        $("#distanceResult").text(distance.toFixed(5).replace(/(\d)(?=(\d{3})+\.)/g, '$1 ').replace(".", ",").replace(" ", "."));
+        $("#distance-div").show();
+        drawingManager.setMap(null);
+    });
     $("#distance-div .glyphicon-remove").click(function () {
         $("#distance-div").hide();
-        poly.setMap(null);
-        for (var i = 0; i < pathMarkerArray.length; i++) {
-            pathMarkerArray[i].setMap(null);
+        polyline.setMap(null);
+        if (isDrawing) {
+            drawingManager.setMap(map);
         }
-        pathMarkerArray = [];
-        path.clear();
     })
 }
-function addPoint(event) {
-    if (path.length == 0) {
-        $("#sourcePoint").text(latLngToString(event.latLng));
+function distanceClick() {
+    if (isDrawing) {
+        isDrawing = false;
+        drawingManager.setMap(null);
+        $("#distance span").removeClass("toolactive");
+        $("#distance-panel").hide();
     } else {
-        $("#descPoint").text(latLngToString(event.latLng));
-    }
-    path.insertAt(path.length, event.latLng);
-    var icon = contextPath + '/img/circle-red.png';
-    var image = {
-        url: icon,
-//        scaledSize: new google.maps.Size(28, 28)
-    };
-    var marker = new google.maps.Marker({
-        position: event.latLng,
-        map: map,
-        draggable: true,
-        icon: image
-    });
-    pathMarkerArray.push(marker);
-    google.maps.event.addListener(marker, 'dragend', function () {
-        for (var i = 0; i < pathMarkerArray.length; ++i) {
-            if (pathMarkerArray[i] == marker) {
-                path.setAt(i, marker.getPosition());
-            }
-        }
-        if (path.length == 1) {
-            $("#sourcePoint").text(pathMarkerArray[0].getPosition().toString());
-        } else if (path.length == 2) {
-            displayDistanceInfo();
-        }
-    });
-    if (path.length > 1) {
-        poly.setPaths(new google.maps.MVCArray([path]));
-        poly.setMap(map);
-        displayDistanceInfo();
+        isDrawing = true;
+        drawingManager.setMap(map);
+        $("#distance span").addClass("toolactive");
     }
 }
 function displayDistanceInfo() {
-    $("#sourcePoint").text(latLngToString(pathMarkerArray[0].getPosition()));
-    $("#descPoint").text(latLngToString(pathMarkerArray[1].getPosition()));
-    var distance = getDistance(pathMarkerArray[0].getPosition(), pathMarkerArray[1].getPosition());
+    var distance = getDistance(path.getAt(0), path.getAt(1));
     $("#distanceResult").text(distance.toFixed(5).replace(/(\d)(?=(\d{3})+\.)/g, '$1 ').replace(".", ",").replace(" ", "."));
     $("#distance-div").show();
 }
 function initSize() {
     var contentTop = $("#row-banner").outerHeight() + $("#row-nav").outerHeight() + 8;
-    $("#show-left-panel").css({top: contentTop});
+    $("#show-left-panel").css({top: contentTop - 3});
     var contentHeight = $(window).height() - $("#row-banner").outerHeight() - $("#row-nav").outerHeight() - 8;
     $("#row-content").height(contentHeight);
     $("#googleMap").height(contentHeight);
@@ -328,29 +313,15 @@ $(function () {
 //    $("#pan").click(setPan);
     $("#share").click(showLinkShare);
     $("#distance").click(distanceClick);
+    $("#show-left-panel").click(showLeftPanel);
+    $("#hide-left-panel").click(hideLeftPanel);
 
 });
 
 var rad = function (x) {
     return x * Math.PI / 180;
 };
-function distanceClick() {
-    if ($("#distance span").hasClass("toolactive")) {
-        $("#distance span").removeClass("toolactive");
-        $("#distance-panel").hide();
-        for (var i = 0; i < pathMarkerArray.length; ++i) {
-            pathMarkerArray[i].setMap(null);
-        }
-        poly.setMap(null);
-    } else {
-        $("#distance span").addClass("toolactive");
-        $("#distance-panel").show();
-        for (var i = 0; i < pathMarkerArray.length; ++i) {
-            pathMarkerArray[i].setMap(map);
-        }
-        poly.setMap(map);
-    }
-}
+
 function changeCurrentLink() {
     var latLng = map.getCenter();
     var currentUrl = requestUrl + "?x=" + latLng.lat() + "&y=" + latLng.lng() + "&zoom=" + map.getZoom();
@@ -380,6 +351,21 @@ function resetMarkerIcon() {
         var tramBTS = tramBTSList[i];
         tramBTS.marker.setIcon(tramBTS.icon);
     }
+}
+
+function hideLeftPanel() {
+    $("#left-panel").hide();
+    $("#right-panel").attr("class", "col-md-12 col-sm-12 col-lg-12 col-xs-12");
+    $("#show-left-panel").show();
+    google.maps.event.trigger(map, 'resize');
+    map.setZoom(map.getZoom());
+}
+function showLeftPanel() {
+    $("#left-panel").show();
+    $("#right-panel").attr("class", "col-md-9 col-sm-9 col-lg-9 col-xs-9");
+    $("#show-left-panel").hide();
+    google.maps.event.trigger(map, 'resize');
+    map.setZoom(map.getZoom());
 }
 
 

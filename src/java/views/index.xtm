@@ -57,8 +57,8 @@
                 </div>
             </div>
             <div class="row" style="border: 1px solid #dfdfdf;border-top: none;border-bottom: none" id="row-content">
-                <div id="show-left-panel"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></div>
-                <div id=left-panel" class="col-md-3 col-sm-3 col-lg-3 col-xs-3" style="border: 1px solid #dfdfdf;height: 100%;border-bottom: none;border-left: none">
+                <div id="show-left-panel" style="display: none"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></div>
+                <div id="left-panel" class="col-md-3 col-sm-3 col-lg-3 col-xs-3" style="border: 1px solid #dfdfdf;height: 100%;border-bottom: none;border-left: none">
                     <div id="hide-left-panel"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></div>
                     <div class="panel panel-info" id="search-panel">
                         <div class="panel-heading">Tìm kiếm BTS</div>
@@ -111,7 +111,7 @@
                         </div>
                     </div>
                 </div>
-                <div id=right-panel" class="col-md-9 col-sm-9 col-lg-9 col-xs-9" >
+                <div id="right-panel" class="col-md-9 col-sm-9 col-lg-9 col-xs-9" >
                     <!--                        <div id="distance-panel" style="display: none">
                                                 <table class="table table-bordered" style="border-bottom: none;margin-bottom: 0"> 
                                                     <thead> <tr> <th>Điểm đầu</th> <th>Điểm cuối</th> <th>Khoảng cách (m)</th> </tr> </thead> 
