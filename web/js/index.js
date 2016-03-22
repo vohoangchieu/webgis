@@ -56,7 +56,7 @@ function initPoly() {
         for (var i = 0; i < latLngArray.length - 1; i++) {
             distance += getDistance(latLngArray[i], latLngArray[i + 1]);
         }
-        $("#distanceResult").text(distance.toFixed(5).replace(/(\d)(?=(\d{3})+\.)/g, '$1 ').replace(".", ",").replace(" ", "."));
+        $("#distanceResult").text(distance.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1 ').replace(".", ",").replace(" ", "."));
         $("#distance-div").show();
         drawingManager.setMap(null);
     });
@@ -70,21 +70,27 @@ function initPoly() {
 }
 function distanceClick() {
     if (isDrawing) {
-        isDrawing = false;
-        drawingManager.setMap(null);
-        $("#distance span").removeClass("toolactive");
-        $("#distance-panel").hide();
+        disableDrawing();
     } else {
         isDrawing = true;
         drawingManager.setMap(map);
         $("#distance span").addClass("toolactive");
     }
 }
-function displayDistanceInfo() {
-    var distance = getDistance(path.getAt(0), path.getAt(1));
-    $("#distanceResult").text(distance.toFixed(5).replace(/(\d)(?=(\d{3})+\.)/g, '$1 ').replace(".", ",").replace(" ", "."));
-    $("#distance-div").show();
+function disableDrawing() {
+    if (isDrawing) {
+        isDrawing = false;
+        if (drawingManager) {
+            drawingManager.setMap(null);
+        }
+        $("#distance span").removeClass("toolactive");
+        $("#distance-div").hide();
+        if (polyline) {
+            polyline.setMap(null);
+        }
+    }
 }
+
 function initSize() {
     var contentTop = $("#row-banner").outerHeight() + $("#row-nav").outerHeight() + 8;
     $("#show-left-panel").css({top: contentTop - 3});
@@ -92,8 +98,8 @@ function initSize() {
     $("#row-content").height(contentHeight);
     $("#googleMap").height(contentHeight);
     var searchResultPanelHeight = contentHeight - $("#search-panel").height() - $("#note-panel").height();
-    $("#search-result-panel").height(searchResultPanelHeight - 40);
-    $("#search-result-panel panel-body").height(searchResultPanelHeight - 73);
+//    $("#search-result-panel").height(searchResultPanelHeight - 40);
+//    $("#search-result-panel panel-body").height(/*searchResultPanelHeight - 80*/135);
 }
 document.onready = function () {
     initSize();
@@ -146,7 +152,7 @@ function initMarkerClusterer() {
 //        markers[i]=marker;
 
 
-        var content = "<div style=\"width:400px;max-height:300px;overflow:scroll\"><table class=\"table table-bordered\" > " +
+        var content = "<div class=\"bts-infowindow\" style=\"width:400px;max-height:300px;overflow:scroll\"><table class=\"table table-bordered\" > " +
                 " <thead style='background:#d9edf7'>  " +
                 "    <tr> <th colspan=\"2\" style='text-align:center'>Thông tin trạm</th></tr> " +
                 " </thead>  " +
@@ -217,7 +223,6 @@ $(function () {
                     ) {
                 count++;
                 html += "<tr id='row-" + tramBTS.MaSo + "' onclick='handleSearchResultRowClick(" + tramBTS.MaSo + ")'> \n\
-                    <td>" + tramBTS.MaSo + "</td>\n\
                     <td>" + tramBTS.TenTram + "</td>\n\
                     <td>" + tramBTS.NgayLapDat + "</td>\n\
                     <td>" + tramBTS.DiaChiLapDat + "</td>\n\
@@ -244,18 +249,21 @@ $(function () {
 
 
 function zoomIn() {
+    disableDrawing();
     var zoom = map.getZoom();
     if (zoom < 21) {
         map.setZoom(zoom + 1);
     }
 }
 function zoomOut() {
+    disableDrawing();
     var zoom = map.getZoom();
     if (zoom > 0) {
         map.setZoom(zoom - 1);
     }
 }
 function goHome() {
+    disableDrawing();
     var location = new google.maps.LatLng(homeLat, homeLng);
     map.setCenter(location);
     map.setZoom(homeZoomLevel);
@@ -289,15 +297,17 @@ function handleSearchResultRowClick(MaSo) {
     showMarker(MaSo);
 }
 function setPan() {
-    if ($("#pan span").hasClass("toolactive")) {
-        $("#pan span").removeClass("toolactive");
-        map.setOptions({draggable: false});
-    } else {
-        $("#pan span").addClass("toolactive");
-        map.setOptions({draggable: true});
-    }
+    disableDrawing();
+//    if ($("#pan span").hasClass("toolactive")) {
+//        $("#pan span").removeClass("toolactive");
+//        map.setOptions({draggable: false});
+//    } else {
+//        $("#pan span").addClass("toolactive");
+//        map.setOptions({draggable: true});
+//    }
 }
 function showLinkShare() {
+    disableDrawing();
     if ($("#share span").hasClass("toolactive")) {
         $("#share span").removeClass("toolactive");
         $("#link").hide();
@@ -310,7 +320,7 @@ $(function () {
     $("#zoom-in").click(zoomIn);
     $("#zoom-out").click(zoomOut);
     $("#home").click(goHome);
-//    $("#pan").click(setPan);
+    $("#pan").click(setPan);
     $("#share").click(showLinkShare);
     $("#distance").click(distanceClick);
     $("#show-left-panel").click(showLeftPanel);
