@@ -1,0 +1,10 @@
+.bts-infowindow th{
+    font-weight: bold;
+}
+.bts-infowindow{
+    height: 280px;
+}
+#search-result-panel tr:nth-child(even) {
+    background: #269abc;
+}
+

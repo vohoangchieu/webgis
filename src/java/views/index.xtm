@@ -12,6 +12,10 @@
         <link href="{{contextPath}}/css/index.css?{{staticVersion}}" rel="stylesheet">
         <link href="{{contextPath}}/css/jquery-ui.min.css?{{staticVersion}}" rel="stylesheet">
         <!--<link href="{{contextPath}}/css/select2.min.css?{{staticVersion}}" rel="stylesheet">-->
+        <script src="{{contextPath}}/js/jquery.min.js?{{staticVersion}}"></script>
+<!--[if IE]>
+  <link href="{{contextPath}}/css/ie.css?{{staticVersion}}" rel="stylesheet">
+<![endif]-->
     </head>
     <body>
         <script>
@@ -42,8 +46,11 @@
                 <div  class="col-md-3 col-sm-3 col-lg-3 col-xs-3">
                     <ul class="nav nav-tabs">
                         <li title="Xem toàn tỉnh An Giang" role="presentation" id="home"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></li>
-                        <li title="Phóng to bản đồ" role="presentation" id="zoom-in"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true" ></span></li>
-                        <li title="Thu nhỏ bản đồ" role="presentation" id="zoom-out"><span class="glyphicon glyphicon-zoom-out" aria-hidden="true" ></span></li>
+                        <li title="Phóng to vùng được chọn" role="presentation" id="zoom-in-select"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true" ></span></li>
+                        <li title="Thu nhỏ vùng được chọn" role="presentation" id="zoom-out-select"><span class="glyphicon glyphicon-zoom-out" aria-hidden="true" ></span></li>
+                        <!--<li role="presentation"><span class="glyphicon glyphicon-info-sign" aria-hidden="true" ></span></li>-->
+                        <li title="Phóng to bản đồ" role="presentation" id="zoom-in"><span class="glyphicon glyphicon-resize-full" aria-hidden="true" ></span></li>
+                        <li title="Thu nhỏ bản đồ" role="presentation" id="zoom-out"><span class="glyphicon glyphicon-resize-small" aria-hidden="true" ></span></li>
                         <!--<li role="presentation"><span class="glyphicon glyphicon-info-sign" aria-hidden="true" ></span></li>-->
                         <li title="Tính khoảng cách" role="presentation" id="distance"><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span></li>
                         <li title="Cho phép di chuyển bản đồ" role="presentation" id="pan" ><span class="glyphicon glyphicon-hand-up " aria-hidden="true"></span></li>
@@ -88,10 +95,10 @@
                     </div>
                     <div class="panel panel-info" id="search-result-panel">
                         <div class="panel-heading">Kết quả tìm kiếm BTS</div>
-                        <div class="panel-body" style="overflow: scroll;height: 150px">
+                        <div class="panel-body" style="overflow: scroll;height: 130px">
                             <table class="table table-bordered"> 
                                 <thead> 
-                                    <tr> <th>#</th><th>Tên trạm</th><th>Ngày lắp đăt</th><th>Điạ chỉ lắp đặt</th><th>Tỉnh thành lắp đặt</th><th>Quận huyện lắp đặt</th><th>Phường xã lắp đặt</th><th>Toạ độ X</th><th>Toạ độ Y</th><th>Trạng thái</th><th>Chiều cao</th><th>Ghi chú</th> </tr>
+                                    <tr> <th>Tên trạm</th><th>Ngày lắp đăt</th><th>Điạ chỉ lắp đặt</th><th>Tỉnh thành lắp đặt</th><th>Quận huyện lắp đặt</th><th>Phường xã lắp đặt</th><th>Toạ độ X</th><th>Toạ độ Y</th><th>Trạng thái</th><th>Chiều cao</th><th>Ghi chú</th> </tr>
                                 </thead> 
                                 <tbody> 
                                 </tbody> 
@@ -104,8 +111,8 @@
                             <table class="table table-bordered" style="margin-bottom: 0"> 
 
                                 <tbody> 
-                                    <tr> <td style="margin: auto"><img src="{{contextPath}}/img/green.ico?{{staticVersion}}" style="width: 28px;margin: auto"></td><td>Trạm đã xây dựng</td></tr> 
-                                    <tr>   <td style="margin: auto"><img src="{{contextPath}}/img/red.ico?{{staticVersion}}" style="width: 28px;margin: auto"></td><td>Trạm trong quy hoạch</td></tr> 
+                                    <tr><td><input type="checkbox" value="1" class="btsType" checked data-type="1"></td> <td style="margin: auto"><img src="{{contextPath}}/img/green.ico?{{staticVersion}}" style="width: 20px;margin: auto"></td><td>Trạm đã xây dựng</td></tr> 
+                                    <tr><td><input type="checkbox" value="2" class="btsType" checked data-type="2"></td>   <td style="margin: auto"><img src="{{contextPath}}/img/red.ico?{{staticVersion}}" style="width: 20px;margin: auto"></td><td>Trạm trong quy hoạch</td></tr> 
                                 </tbody> 
                             </table>
                         </div>
@@ -133,7 +140,7 @@
             src="http://maps.googleapis.com/maps/api/js?key=AIzaSyByc8l-aogtJC0sXXt33SBbjvHC6KbBZ0Y&libraries=drawing"></script>
 
             <script src="{{contextPath}}/js/markerclusterer_compiled.js?{{staticVersion}}"></script>
-            <script src="{{contextPath}}/js/jquery.min.js?{{staticVersion}}"></script>
+           
             <script src="{{contextPath}}/js/jquery-ui.min.js?{{staticVersion}}"></script>
             <!--<script src="{{contextPath}}/js/jquery.textcomplete.min.js?{{staticVersion}}"></script>-->
             <!--<script src="{{contextPath}}/js/jquery.overlay.js?{{staticVersion}}"></script>-->
@@ -141,6 +148,15 @@
             <!--<script src="{{contextPath}}/js/select2.min.js?{{staticVersion}}"></script>-->
             <script src="{{contextPath}}/js/common.js?{{staticVersion}}"></script>
             <script src="{{contextPath}}/js/index.js?{{staticVersion}}"></script>
+            <script src="{{contextPath}}/js/index1.js?{{staticVersion}}"></script>
+            <!--[if IE]>
+              <script src="{{contextPath}}/js/jquery.placeholder.js?{{staticVersion}}"></script>
+            <script>
+                $(function(){
+                    $('#search-panel input').placeholder();
+                })
+            </script>
+            <![endif]-->
         </div>
     </body>
 </html>
