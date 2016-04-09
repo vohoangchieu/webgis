@@ -64,7 +64,7 @@ public class IndexServlet extends BaseServlet {
             dic.setVariable("y", y);
             dic.setVariable("zoom", zoom);
             dic.setVariable("staticVersion",String.valueOf(System.currentTimeMillis()));// AppConfig.staticVersion);
-            dic.setVariable("staticVersion","0");
+//            dic.setVariable("staticVersion","0");
             dic.setVariable("webTitle", AppConfig.webTitle);
             dic.setVariable("contextPath", AppConfig.contextPath);
             dic.setVariable("homeLat", AppConfig.homeLat);
