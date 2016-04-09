@@ -35,7 +35,8 @@ function selectText(containerid) {
 }
 function replaceUnicode(input) {
     var signedChars = "àảãáạăằẳẵắặâầẩẫấậđèẻẽéẹêềểễếệìỉĩíịòỏõóọôồổỗốộơờởỡớợùủũúụưừửữứựỳỷỹýỵÀẢÃÁẠĂẰẲẴẮẶÂẦẨẪẤẬĐÈẺẼÉẸÊỀỂỄẾỆÌỈĨÍỊÒỎÕÓỌÔỒỔỖỐỘƠỜỞỠỚỢÙỦŨÚỤƯỪỬỮỨỰỲỶỸÝỴ";
-    var unsignedChars = "aaaaaaaaaaaaaaaaadeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuuyyyyyAAAAAAAAAAAAAAAAADEEEEEEEEEEEIIIIIOOOOOOOOOOOOOOOOOUUUUUUUUUUUYYYYY";
+//    var unsignedChars = "aaaaaaaaaaaaaaaaadeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuuyyyyyAAAAAAAAAAAAAAAAADEEEEEEEEEEEIIIIIOOOOOOOOOOOOOOOOOUUUUUUUUUUUYYYYY";
+    var unsignedChars = "aaaaaaaaaaaaaaaaadeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuuyyyyyaaaaaaaaaaaaaaaaadeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuuyyyyy";
     var pattern = new RegExp("[" + signedChars + "]", "g");
     var output = input.replace(pattern, function (m, key, value) {
         return unsignedChars.charAt(signedChars.indexOf(m));
@@ -53,6 +54,22 @@ var getDistance = function (p1, p2) {
     return d; // returns the distance in meter 
 };
 function latLngToString(latLng) {
-    return "("+ latLng.lat().toFixed(5) + " , " + latLng.lng().toFixed(5) +")";
+    return "(" + latLng.lat().toFixed(5) + " , " + latLng.lng().toFixed(5) + ")";
 
+}
+function getDDMMYYYY() {
+    var date = new Date();
+    var dateDDMMYYYY = '';
+    if (date.getDate() < 10) {
+        dateDDMMYYYY += '0' + date.getDate() + '/';
+    } else {
+        dateDDMMYYYY += date.getDate() + '/';
+    }
+    if (date.getMonth() + 1 < 10) {
+        dateDDMMYYYY += '0' + (date.getMonth() + 1) + '/';
+    } else {
+        dateDDMMYYYY += (date.getMonth() + 1) + '/';
+    }
+    dateDDMMYYYY += date.getFullYear();
+    return dateDDMMYYYY;
 }

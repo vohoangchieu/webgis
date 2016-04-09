@@ -171,7 +171,6 @@ $(function () {
 })
 var updateTimeout = null;
 function initPoly() {
-//    console.log("initPoly");
     poly = new google.maps.Polyline({
         strokeColor: '#00ffff',
         strokeOpacity: 0.5,
@@ -183,14 +182,14 @@ function initPoly() {
             clearTimeout(updateTimeout);
         }
 
-        if (isDrawing) {
+        if (isDrawingCalcDistance) {
             addMarker(event.latLng);
             startnewline = true;
         }
     });
     map.addListener('click', function (event) {
         updateTimeout = setTimeout(function () {
-            if (isDrawing) {
+            if (isDrawingCalcDistance) {
                 addMarker(event.latLng);
             }
         }, 200);
@@ -208,26 +207,25 @@ function initPoly() {
     })
 }
 function distanceClick() {
-    if (isDrawing) {
+    if (isDrawingCalcDistance) {
         map.setOptions({draggableCursor: null});
-        disableDrawing();
+        disableDrawingCalcDistance();
     } else {
-        isDrawing = true;
+        disableDrawing();
+        isDrawingCalcDistance = true;
         poly.setMap(map);
         $("#distance span").addClass("toolactive");
         $("#distanceResult").text("0");
         map.setOptions({disableDoubleClickZoom: true});
-//        map.setOptions({draggableCursor: 'url(http://maps.gstatic.com/mapfiles/crosshair.cur)'});
         map.setOptions({draggableCursor: 'crosshair'});
         disableZoomInSelect();
         disableZoomOutSelect();
-//        $("#distance-div").show();
     }
 }
-function disableDrawing() {
-    if (isDrawing) {
+function disableDrawingCalcDistance() {
+    if (isDrawingCalcDistance) {
+        isDrawingCalcDistance = false;
         map.setOptions({disableDoubleClickZoom: false});
-        isDrawing = false;
         $("#distance span").removeClass("toolactive");
         $("#distance-div").hide();
         if (poly) {
@@ -290,13 +288,19 @@ function disableZoomOutSelect() {
     }
     drawingManager1 = null;
 }
+function disableEdit() {
+    if ($("#edit span").hasClass("toolactive")) {
+        $("#edit span").removeClass("toolactive");
+        isEditing = false;
+        map.setOptions({draggableCursor: null});
+    }
+}
 function zoomInSelectClick() {
     $("#zoom-out-select span").removeClass("toolactive");
     if ($("#zoom-in-select span").hasClass("toolactive")) {
-
         disableZoomInSelect();
     } else {
-//        disableZoomOutSelect();
+//        disableDrawingCalcDistance();
         disableDrawing();
         enableZoomInSelect();
     }
@@ -307,10 +311,9 @@ function zoomOutSelectClick() {
     if ($("#zoom-out-select span").hasClass("toolactive")) {
         disableZoomOutSelect();
     } else {
-//        disableZoomInSelect();
+//        disableDrawingCalcDistance();
         disableDrawing();
         enableZoomOutSelect();
     }
 }
-
 

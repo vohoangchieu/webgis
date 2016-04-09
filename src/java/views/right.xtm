@@ -1,0 +1,7 @@
+                <div id="right-panel" class="col-md-9 col-sm-9 col-lg-9 col-xs-9" >
+
+                    <div id="distance-div" style="display: none">
+                        Khoảng cách (m):  <span id="distanceResult">123 456</span><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    </div>
+                    <div id="googleMap" style="border: 1px solid #dfdfdf;"></div>
+                </div>

@@ -11,7 +11,7 @@ import java.util.Date;
  *
  * @author chieuvh
  */
-public class TramBTSEntity {
+public class TramBTSEntity extends BaseEntity{
     public int MaSo;
     public String TenTram;
     public Date NgayLapDat;

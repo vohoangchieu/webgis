@@ -29,7 +29,7 @@ import web.gis.config.AppConfig;
  *
  * @author chieuvh
  */
-public class IndexServlet extends HttpServlet {
+public class IndexServlet extends BaseServlet {
 
     private static final Logger logger = Logger.getLogger(IndexServlet.class);
 
@@ -55,11 +55,16 @@ public class IndexServlet extends HttpServlet {
             String zoom = Util.getParameter(request, "zoom");
             String requestUrl = Util.getRequestUrl(request);
             TemplateDataDictionary dic = TemplateDictionary.create();
+            dic.showSection("popup");
+            dic.showSection("top");
+            dic.showSection("left");
+            dic.showSection("right");
             dic.setVariable("maso", maso);
             dic.setVariable("x", x);
             dic.setVariable("y", y);
             dic.setVariable("zoom", zoom);
-            dic.setVariable("staticVersion", AppConfig.staticVersion);
+            dic.setVariable("staticVersion",String.valueOf(System.currentTimeMillis()));// AppConfig.staticVersion);
+            dic.setVariable("staticVersion","0");
             dic.setVariable("webTitle", AppConfig.webTitle);
             dic.setVariable("contextPath", AppConfig.contextPath);
             dic.setVariable("homeLat", AppConfig.homeLat);
@@ -93,66 +98,6 @@ public class IndexServlet extends HttpServlet {
 
     }
 
-    protected Template getCTemplate(String tpl) throws TemplateException {
-        TemplateLoader templateLoader = TemplateResourceLoader.create("views/");
-        Template template = templateLoader.getTemplate(tpl);
-        return template;
-    }
-
-    protected void outContent(String content, HttpServletResponse response) {
-
-        PrintWriter out = null;
-        try {
-            response.setContentType("text/html;charset=UTF-8");
-            response.setCharacterEncoding("UTF-8");
-            out = response.getWriter();
-            out.print(content);
-        } catch (Exception ex) {
-            logger.error(ex.getMessage(), ex);
-        } finally {
-            if (out != null) {
-                out.close();
-            }
-        }
-    }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+   
 
 }

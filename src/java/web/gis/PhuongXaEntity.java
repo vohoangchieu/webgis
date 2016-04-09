@@ -14,6 +14,6 @@ public class PhuongXaEntity {
     public int Id;
     public transient String MaSo;
     public String Ten;
-    public  transient int ThuocQuanHuyen;
+    public  int ThuocQuanHuyen;
     public transient  boolean IsActive;
 }

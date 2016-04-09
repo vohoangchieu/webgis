@@ -1,14 +1,15 @@
-var markers = {};
+var KEYCODE = {left: 37, up: 38, right: 39, down: 40, enter: 13, backspace: 8, pause: 19};
+var markersMap = {};
 var markerArray = [];
 var infoWindows = {};
 var contents = {};
-var tramBTSMap = {};
 var globalInfoWindow = null;
 var map, poly;
 var markerClusterer;
 var path = new google.maps.MVCArray;
 var pathMarkerArray = [];
-var isDrawing = false;
+var isDrawingCalcDistance = false;
+var isEditing = false;
 var drawingManager = null;
 var polyline = null;
 var currentIcon = {
@@ -34,63 +35,7 @@ function initMap() {
     }
     map = new google.maps.Map(document.getElementById("googleMap"), mapOptions);
 }
-//function initPoly() {
-//    drawingManager = new google.maps.drawing.DrawingManager({
-//        drawingControl: false,
-//        drawingMode: google.maps.drawing.OverlayType.POLYLINE,
-//        drawingControlOptions: {
-//            position: google.maps.ControlPosition.TOP_CENTER,
-//            drawingModes: [
-//                google.maps.drawing.OverlayType.POLYLINE,
-//            ]
-//        },
-//        polylineOptions: {
-//            strokeColor: '#ff80df',
-//            zIndex: 6
-//        }
-//    });
-////    drawingManager.setMap(map);
-//    google.maps.event.addListener(drawingManager, 'polylinecomplete', function (event) {
-//        polyline = event;
-//        var latLngArray = (event.getPath().getArray());
-//        var distance = 0; //getDistance(latLngArray[0], latLngArray[1]);
-//        for (var i = 0; i < latLngArray.length - 1; i++) {
-//            distance += getDistance(latLngArray[i], latLngArray[i + 1]);
-//        }
-//        $("#distanceResult").text(distance.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1 ').replace(".", ",").replace(" ", "."));
-//        $("#distance-div").show();
-//        drawingManager.setMap(null);
-//    });
-//    $("#distance-div .glyphicon-remove").click(function () {
-//        $("#distance-div").hide();
-//        polyline.setMap(null);
-//        if (isDrawing) {
-//            drawingManager.setMap(map);
-//        }
-//    })
-//}
-//function distanceClick() {
-//    if (isDrawing) {
-//        disableDrawing();
-//    } else {
-//        isDrawing = true;
-//        drawingManager.setMap(map);
-//        $("#distance span").addClass("toolactive");
-//    }
-//}
-//function disableDrawing() {
-//    if (isDrawing) {
-//        isDrawing = false;
-//        if (drawingManager) {
-//            drawingManager.setMap(null);
-//        }
-//        $("#distance span").removeClass("toolactive");
-//        $("#distance-div").hide();
-//        if (polyline) {
-//            polyline.setMap(null);
-//        }
-//    }
-//}
+
 
 function initSize() {
     var contentTop = $("#row-banner").outerHeight() + $("#row-nav").outerHeight() + 8;
@@ -98,24 +43,19 @@ function initSize() {
     var contentHeight = $(window).height() - $("#row-banner").outerHeight() - $("#row-nav").outerHeight() - 8;
     $("#row-content").height(contentHeight);
     $("#googleMap").height(contentHeight);
-//    var searchResultPanelHeight = contentHeight - $("#search-panel").height() - $("#note-panel").height();
-//    $("#search-result-panel").height(searchResultPanelHeight - 40);
-//    $("#search-result-panel panel-body").height(/*searchResultPanelHeight - 80*/135);
+
 }
 document.onready = function () {
     initSize();
     initMap();
-//    initPoly();
-
     map.addListener('center_changed', changeCurrentLink);
     map.addListener('zoom_changed', changeCurrentLink);
     changeCurrentLink();
     initMarkerClusterer();
-//    if (maso) {
-//        showMarker(maso);
-//    }
+
 }
 function initMarkerClusterer() {
+    clearAllMarker();
     for (var i = 0; i < tramBTSList.length; i++) {
         var tramBTS = tramBTSList[i];
         var key = tramBTS.MaSo;
@@ -147,13 +87,13 @@ function initMarkerClusterer() {
         if (!useCluster) {
             marker.setMap(map);
         }
+        marker.tramBTS = tramBTS;
         tramBTS.marker = marker;
-        markers[key] = (marker);
+        markersMap[key] = (marker);
         markerArray.push(marker);
-//        markers[i]=marker;
 
 
-        var content = "<div class=\"bts-infowindow\" style=\"width:400px;max-height:300px;overflow:scroll\"><table class=\"table table-bordered\" > " +
+        var content = "<div class=\"bts-infowindow\" style=\"width:480px;max-height:300px;\"><table class=\"table table-bordered\" > " +
                 " <thead style='background:#d9edf7'>  " +
                 "    <tr> <th colspan=\"2\" style='text-align:center'>Thông tin trạm</th></tr> " +
                 " </thead>  " +
@@ -169,15 +109,13 @@ function initMarkerClusterer() {
                 "      <tr> <th>Trạng thái</th> <td>" + tinhtrangMap[tramBTS.TrangThai] + "</td></tr>  " +
                 "      <tr> <th>Chiều cao</th> <td>" + tramBTS.ChieuCao + "</td></tr>  " +
                 "      <tr> <th>Ghi chú</th> <td>" + tramBTS.GhiChu + "</td></tr>  " +
-//                "      <tr> <th>Link</th> <td><a href='" + contextPath + "/?maso=" + tramBTS.MaSo + "'>" + tramBTS.TenTram + "</a></td></tr>  " +
+                "      <tr> <th>Đơn vị thuê</th> <td>" + tramBTS.DonViThue + "</td></tr>  " +
+                "      <tr> <th>Đơn vị lắp đặt</th> <td>" + tramBTS.TenDVQL + "</td></tr>  " +
                 "  </tbody>  " +
                 "</table></div>";
         contents[key] = content;
-        var infoWindow = new google.maps.InfoWindow({
-            content: contents[key]
-        });
-        infoWindows[key] = (infoWindow);
-        google.maps.event.addListener(markers[key], 'click', (function (marker, content, infowindow) {
+
+        google.maps.event.addListener(markersMap[key], 'click', (function (marker, content, infowindow) {
             return function () {
                 if (globalInfoWindow) {
                     globalInfoWindow.close();
@@ -189,11 +127,11 @@ function initMarkerClusterer() {
                     marker.setMap(map);
                     globalInfoWindow.open(map, marker);
                 }, 0)
-                if (isDrawing) {
+                if (isDrawingCalcDistance) {
                     addMarker(marker.getPosition());
                 }
             };
-        })(markers[key], contents[key], globalInfoWindow));
+        })(markersMap[key], contents[key], globalInfoWindow));
     }
     var clusterStyles = getClusterStyles();
     var mcOptions = {
@@ -204,59 +142,11 @@ function initMarkerClusterer() {
     if (useCluster) {
         markerClusterer = new MarkerClusterer(map, markerArray, mcOptions);
     }
-//    markerClusterer = new MarkerClusterer(map, markerArray, mcOptions);
 }
-$(function () {
-    $("#timkiem").click(function () {
-        disableDrawing();
-        var html = "";
-        var tentram = replaceUnicode($("#tentram").val()).toLowerCase();
-        var kihieutram = $("#kihieutram").val();
-        var toadox = $("#toadox").val();
-        var toadoy = $("#toadoy").val();
-        var count = 0;
-        for (var i = 0; i < tramBTSList.length; i++) {
-            var tramBTS = tramBTSList[i];
-            if (tramBTS.ToaDoVD <= 0 || tramBTS.ToaDoKD <= 0) {
-                continue;
-            }
-            if (
-                    (kihieutram == tramBTS.MaSo) ||
-                    (tentram && tramBTS.TenTram1.indexOf(tentram) > -1) ||
-                    (toadox && toadox == tramBTS.ToaDoVD) ||
-                    (toadoy && toadoy == tramBTS.ToaDoKD)
-                    ) {
-                count++;
-                html += "<tr id='row-" + tramBTS.MaSo + "' onclick='handleSearchResultRowClick(" + tramBTS.MaSo + ")'> \n\
-                    <td>" + tramBTS.TenTram + "</td>\n\
-                    <td>" + tramBTS.NgayLapDat + "</td>\n\
-                    <td>" + tramBTS.DiaChiLapDat + "</td>\n\
-                    <td>" + tinhThanhMap[tramBTS.TinhThanhLD].Ten + "</td>\n\
-                    <td>" + quanHuyenMap[tramBTS.QuanHuyenLD].Ten + "</td>\n\
-                    <td>" + phuongXaMap[tramBTS.PhuongXaLD].Ten + "</td>\n\
-                    <td>" + tramBTS.ToaDoVD + "</td>\n\
-                    <td>" + tramBTS.ToaDoKD + "</td>\n\
-                    <td>" + tinhtrangMap[tramBTS.TrangThai] + "</td>\n\
-                    <td>" + tramBTS.ChieuCao + "</td>\n\
-                    <td>" + tramBTS.GhiChu + "</td> \n\
-                    </tr>";
-            }
-        }
-        if (count == 0) {
-            resetMarkerIcon();
-        }
-        $("#search-result-panel tbody").html(html);
-    })
-    $("#link").click(function () {
-        selectText("link");
-    })
-})
 
 
 function zoomIn() {
     disableDrawing();
-    disableZoomInSelect();
-    disableZoomOutSelect();
     map.setOptions({draggableCursor: null});
     var zoom = map.getZoom();
     if (zoom < 21) {
@@ -265,8 +155,7 @@ function zoomIn() {
 }
 function zoomOut() {
     disableDrawing();
-    disableZoomInSelect();
-    disableZoomOutSelect();
+
     map.setOptions({draggableCursor: null});
     var zoom = map.getZoom();
     if (zoom > 0) {
@@ -275,8 +164,6 @@ function zoomOut() {
 }
 function goHome() {
     disableDrawing();
-    disableZoomInSelect();
-    disableZoomOutSelect();
     map.setOptions({draggableCursor: null});
     var location = new google.maps.LatLng(homeLat, homeLng);
     map.setCenter(location);
@@ -295,38 +182,20 @@ function showMarker(MaSo) {
     if (map.getZoom() < detailZoomLevel) {
         map.setZoom(detailZoomLevel);
         setTimeout(function () {
-//            map.setCenter(markers[MaSo].getPosition());
-            map.panTo(markers[MaSo].getPosition());
-            google.maps.event.trigger(markers[MaSo], 'click');
+            map.panTo(markersMap[MaSo].getPosition());
+            google.maps.event.trigger(markersMap[MaSo], 'click');
         }, 1000)
     } else {
-//        map.setCenter(markers[MaSo].getPosition());
-        map.panTo(markers[MaSo].getPosition());
-        google.maps.event.trigger(markers[MaSo], 'click');
+        map.panTo(markersMap[MaSo].getPosition());
+        google.maps.event.trigger(markersMap[MaSo], 'click');
     }
-}
-function handleSearchResultRowClick(MaSo) {
-    $("#search-result-panel tbody tr").removeClass("row-active");
-    $("#row-" + MaSo).addClass("row-active");
-    showMarker(MaSo);
 }
 function setPan() {
     disableDrawing();
-    disableZoomInSelect();
-    disableZoomOutSelect();
     map.setOptions({draggableCursor: null});
-//    if ($("#pan span").hasClass("toolactive")) {
-//        $("#pan span").removeClass("toolactive");
-//        map.setOptions({draggable: false});
-//    } else {
-//        $("#pan span").addClass("toolactive");
-//        map.setOptions({draggable: true});
-//    }
 }
 function showLinkShare() {
     disableDrawing();
-    disableZoomInSelect();
-    disableZoomOutSelect();
     map.setOptions({draggableCursor: null});
     if ($("#share span").hasClass("toolactive")) {
         $("#share span").removeClass("toolactive");
@@ -342,24 +211,19 @@ $(function () {
     $("#home").click(goHome);
     $("#pan").click(setPan);
     $("#share").click(showLinkShare);
-
     $("#show-left-panel").click(showLeftPanel);
     $("#hide-left-panel").click(hideLeftPanel);
 
 });
-
 var rad = function (x) {
     return x * Math.PI / 180;
 };
-
 function changeCurrentLink() {
     var latLng = map.getCenter();
-    var currentUrl = requestUrl + "?x=" + latLng.lat() + "&y=" + latLng.lng() ;//+ "&zoom=" + map.getZoom();
+    var currentUrl = requestUrl + "?x=" + latLng.lat() + "&y=" + latLng.lng();//+ "&zoom=" + map.getZoom();
     $("#link").text(currentUrl);
 }
-
 function getClusterStyles() {
-//    var iconMarker = "http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m1.png";
     var iconMarker = contextPath + '/img/cluster.png?' + staticVersion;
     ;
     var clusterStyle = {
@@ -381,6 +245,17 @@ function resetMarkerIcon() {
         var tramBTS = tramBTSList[i];
         tramBTS.marker.setIcon(tramBTS.icon);
     }
+}
+
+function clearAllMarker() {
+    for (var i = 0; i < tramBTSList.length; i++) {
+        var tramBTS = tramBTSList[i];
+        if (tramBTS.marker) {
+            tramBTS.marker.setMap(null);
+        }
+    }
+    markersMap = {};
+    markerArray = [];
 }
 
 function hideLeftPanel() {
@@ -415,6 +290,12 @@ function handleFilterBTSType() {
         }
     })
 
+}
+function disableDrawing() {
+    disableDrawingCalcDistance();
+    disableZoomInSelect();
+    disableZoomOutSelect();
+    disableEdit();
 }
 $(function () {
     handleFilterBTSType();

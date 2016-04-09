@@ -13,6 +13,14 @@
         <servlet-name>IndexServlet</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>AjaxAddBtsServlet</servlet-name>
+        <servlet-class>web.gis.AjaxAddBtsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AjaxAddBtsServlet</servlet-name>
+        <url-pattern>/ajax/add-bts</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
        <servlet-name>default</servlet-name>
        <url-pattern>/css/*</url-pattern>

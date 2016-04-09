@@ -1,0 +1,23 @@
+<div class="row" style="height: 100px;text-align: center;border: 1px solid #dfdfdf;" id="row-banner">
+    <img src="{{contextPath}}/img/banner.jpg?{{staticVersion}}" height="100%" width="100%">
+</div>
+<div class="row" style=";border-left: 1px solid #dfdfdf;border-right: 1px solid #dfdfdf;" id="row-nav">
+    <div  class="col-md-3 col-sm-5 col-lg-5 col-xs-5">
+        <ul class="nav nav-tabs">
+            <li title="Xem toàn tỉnh An Giang" role="presentation" id="home"><span class="glyphicon glyphicon-home" aria-hidden="true"></span></li>
+            <li title="Phóng to vùng được chọn" role="presentation" id="zoom-in-select"><span class="glyphicon glyphicon-zoom-in" aria-hidden="true" ></span></li>
+            <li title="Thu nhỏ vùng được chọn" role="presentation" id="zoom-out-select"><span class="glyphicon glyphicon-zoom-out" aria-hidden="true" ></span></li>
+            <li title="Phóng to bản đồ" role="presentation" id="zoom-in"><span class="glyphicon glyphicon-resize-full" aria-hidden="true" ></span></li>
+            <li title="Thu nhỏ bản đồ" role="presentation" id="zoom-out"><span class="glyphicon glyphicon-resize-small" aria-hidden="true" ></span></li>
+            <li title="Tính khoảng cách" role="presentation" id="distance"><span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span></li>
+            <li title="Cho phép di chuyển bản đồ" role="presentation" id="pan" ><span class="glyphicon glyphicon-hand-up " aria-hidden="true"></span></li>
+            <li title="Hiện liên kết chia sẻ" role="presentation" id="share" ><span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span></li>
+            <li title="Thêm, xóa, sửa" role="presentation" id="edit" ><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></li>
+        </ul>
+    </div>
+    <div  class="col-md-6 col-sm-6 col-lg-6 col-xs-6">
+        <div style="padding-top: 5px;" >
+            <span id="link" style="font-size: 12px;color: #31b0d5;display: none;float: right"></span>
+        </div>
+    </div>
+</div>

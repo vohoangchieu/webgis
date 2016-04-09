@@ -141,7 +141,7 @@ public class DataAccess {
 
     public int insert(TramBTSEntity tramBTSEntity) throws SQLException {
         String sql = "INSERT INTO `thongtin_trambts` ("
-                + "`MaSo`, `TenTram`, `NgayLapDat`, `DiaChiLapDat`, `TinhThanhLD`, "
+                + " `TenTram`, `NgayLapDat`, `DiaChiLapDat`, `TinhThanhLD`, "
                 + "`QuanHuyenLD`, `PhuongXaLD`, `TrangThai`, `TinhTrang`, `DonViThue`,"
                 + " `ToaDoKD`, `ToaDoVD`, `LoaiTram`, `LoaiCotAT`, `ChieuCao`,"
                 + " `DTSanLap`, `TenDVQL`, `DiaChiDVQL`, `DienThoaiDVQL`, `SoVBTT`,"
@@ -150,7 +150,7 @@ public class DataAccess {
                 + " `DaKiemTra`, `NgayKT`, `TapTinKT`, `GhiChu`, `IsActive`, "
                 + "`CreatedDate`, `CreatedByUserID`, `ModifiedByUserID`, `ModifiedDate`) "
                 + "VALUES ("
-                + ":MaSo,  :TenTram,  :NgayLapDat,  :DiaChiLapDat,  :TinhThanhLD,  "
+                + ":TenTram,  :NgayLapDat,  :DiaChiLapDat,  :TinhThanhLD,  "
                 + ":QuanHuyenLD,  :PhuongXaLD,  :TrangThai,  :TinhTrang,  :DonViThue, "
                 + " :ToaDoKD,  :ToaDoVD,  :LoaiTram,  :LoaiCotAT,  :ChieuCao, "
                 + " :DTSanLap,  :TenDVQL,  :DiaChiDVQL,  :DienThoaiDVQL,  :SoVBTT, "
@@ -162,15 +162,11 @@ public class DataAccess {
         int row = 0;
         try {
             getConnection();
-
             NamedParameterStatement statement = new NamedParameterStatement(conn, sql);
-//              + "`MaSo`, `TenTram`, `NgayLapDat`, `DiaChiLapDat`, `TinhThanhLD`, "
-            statement.setInt("MaSo", tramBTSEntity.MaSo);
             statement.setString("TenTram", tramBTSEntity.TenTram);
             statement.setTimestamp("NgayLapDat", new Timestamp(tramBTSEntity.NgayLapDat.getTime()));
             statement.setString("DiaChiLapDat", tramBTSEntity.DiaChiLapDat);
             statement.setInt("TinhThanhLD", tramBTSEntity.TinhThanhLD);
-//            + "`QuanHuyenLD`, `PhuongXaLD`, `TrangThai`, `TinhTrang`, `DonViThue`,"
             statement.setInt("QuanHuyenLD", tramBTSEntity.QuanHuyenLD);
             statement.setInt("PhuongXaLD", tramBTSEntity.PhuongXaLD);
             statement.setInt("TrangThai", tramBTSEntity.TrangThai);
@@ -191,10 +187,6 @@ public class DataAccess {
             statement.setString("TapTinVBTT", tramBTSEntity.TapTinVBTT);
             statement.setTimestamp("ThueDDTuNgay", new Timestamp(tramBTSEntity.ThueDDTuNgay.getTime()));
             statement.setTimestamp("ThueDDDenNgay", new Timestamp(tramBTSEntity.ThueDDDenNgay.getTime()));
-//        + "`NgayDuaVaoSuDung,  :DaKiemDinh,  :DaCapGiayCN,  :SoGiayCN,  :TapTinKD, "
-//            + " `DaKiemTra,  :NgayKT,  :TapTinKT,  :GhiChu,  :IsActive,  "
-//            + "`CreatedDate,  :CreatedByUserID,  :ModifiedByUserID,  :ModifiedDate`"
-
             statement.setTimestamp("NgayDuaVaoSuDung", new Timestamp(tramBTSEntity.NgayDuaVaoSuDung.getTime()));
             statement.setInt("DaKiemDinh", tramBTSEntity.DaKiemDinh ? 1 : 0);
             statement.setInt("DaCapGiayCN", tramBTSEntity.DaCapGiayCN ? 1 : 0);
@@ -211,6 +203,10 @@ public class DataAccess {
             statement.setTimestamp("ModifiedDate", new Timestamp(tramBTSEntity.ModifiedDate.getTime()));
             logger.info(statement.toString());
             row = statement.executeUpdate();
+            ResultSet rs = statement.getGeneratedKeys();
+            if (rs.next()) {
+                row = rs.getInt(1);
+            }
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
         } finally {
@@ -228,7 +224,7 @@ public class DataAccess {
                 + " `DTSanLap`, `DienThoaiDVQL`, "
                 + " `ThueDDTuNgay`, `ThueDDDenNgay`, "
                 + "`NgayDuaVaoSuDung`, "
-                + " `DaKiemTra`,`GhiChu` "
+                + " `DaKiemTra`,`GhiChu`,`TenDVQL` "
                 + " from `thongtin_trambts` where IsActive=1";
 
         try {
@@ -258,6 +254,7 @@ public class DataAccess {
                 entity.NgayDuaVaoSuDung = resultSet.getTimestamp("NgayDuaVaoSuDung");
                 entity.DaKiemTra = resultSet.getInt("DaKiemTra") == 1;
                 entity.GhiChu = resultSet.getString("GhiChu");
+                entity.TenDVQL = resultSet.getString("TenDVQL");
                 result.add(entity);
             }
 

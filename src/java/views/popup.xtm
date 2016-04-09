@@ -1,0 +1,95 @@
+<div class="popup-overlay"  id="popup-add-bts" style="display: none">
+    <div class="popup-center" style="width: 75%;">
+        <div class="panel panel-info">
+            <div class="panel-heading" ><span id="popup-title">Add New App</span><span onclick="hidePopupAddBTS()" class="glyphicon glyphicon-remove" aria-hidden="true" style="float: right;margin-right: 0;color: red"></span></div>
+            <div class="panel-body">
+
+                <form role="form" class="form-horizontal">
+                    <div class="form-group" style="display: none">
+                        <label for="MaSo" class="col-sm-2 control-label">MaSo</label>
+                        <div class="col-sm-4">
+                            <input type="text"  class="form-control" id="MaSo" placeholder="">
+                        </div>
+
+                    </div>
+                    <div class="form-group">
+                        <label for="TenTram" class="col-sm-2 control-label">Tên trạm</label>
+                        <div class="col-sm-4">
+                            <input type="text"  class="form-control" id="TenTram" placeholder="">
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="NgayLapDat" class="col-sm-2 control-label">Ngày lắp đặt</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="NgayLapDat">
+                        </div>
+                        <label for="TinhThanhLD" class="col-sm-2 control-label">Tỉnh thành</label>
+                        <div class="col-sm-4">
+                            <select id="TinhThanhLD" class="form-control" >
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="QuanHuyenLD" class="col-sm-2 control-label">Quận huyện</label>
+                        <div class="col-sm-4">
+                             <select id="QuanHuyenLD" class="form-control" >
+                            </select>
+                        </div>
+
+                        <label for="PhuongXaLD" class="col-sm-2 control-label">Phường xã</label>
+                        <div class="col-sm-4">
+                            <select id="PhuongXaLD" class="form-control" >
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="DiaChiLapDat" class="col-sm-2 control-label">Địa chỉ</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="DiaChiLapDat">
+                        </div>
+                        <label class="col-sm-2 control-label">Trạng thái</label>
+                        <div class="col-sm-4">    
+                            <select id="TrangThai" class="form-control" >
+                                <option value="1">Đã xây dựng</option>
+                                <option value="2">Trong quy hoạch</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                       
+                        <label for="ToaDoVD" class="col-sm-2 control-label">Tọa độ x</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="ToaDoVD">
+                        </div>
+                         <label for="ToaDoKD" class="col-sm-2 control-label">Tọa độ y</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="ToaDoKD">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="DonViThue" class="col-sm-2 control-label">Đơn vị thuê</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="DonViThue">
+                        </div>
+
+                        <label for="TenDVQL" class="col-sm-2 control-label">Đơn vị quản lý</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="TenDVQL">
+                        </div>
+                    </div>
+
+                    <div id="message" class="alert alert-danger" role="alert" style="padding: 6px;display: none;margin-top: 15px;"></div>
+                    <div style="float: right">
+                        <button type="button" class="btn btn-default" onclick="hidePopupAddBTS()">Hủy</button>
+                        <button type="button" class="btn btn-info" id="btn-add-bts" onclick="handlePopupSubmitAdd()" style="display: none">Thêm</button>
+                        <button type="button" class="btn btn-info" id="btn-update-bts" onclick="handlePopupSubmitUpdate()" style="display: none">Cập nhật</button>
+                        <button type="button" class="btn btn-info" id="btn-delete-bts" onclick="handlePopupSubmitDelete()" style="display: none">Xóa</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

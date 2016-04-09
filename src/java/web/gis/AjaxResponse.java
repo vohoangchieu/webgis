@@ -5,15 +5,17 @@
  */
 package web.gis;
 
+import com.google.gson.Gson;
+
 /**
  *
  * @author chieuvh
  */
-public class QuanHuyenEntity {
+public class AjaxResponse extends BaseEntity{
 
-    public int Id;
-    public transient  String MaSo;
-    public String Ten;
-    public   int ThuocTinhThanh;
-    public  transient boolean IsActive;
+    public int returnCode = 0;
+    public String returnMessage = "";
+    public String data="";
+
+    
 }

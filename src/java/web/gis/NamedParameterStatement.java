@@ -303,6 +303,9 @@ public class NamedParameterStatement {
     public int[] executeBatch() throws SQLException {
         return statement.executeBatch();
     }
+    public ResultSet getGeneratedKeys() throws SQLException {
+        return statement.getGeneratedKeys();
+    }
 
     @Override
     public String toString() {
