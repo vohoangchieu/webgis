@@ -47,6 +47,12 @@ public class NamedParameterStatement {
         String parsedQuery = parse(query, indexMap);
         statement = connection.prepareStatement(parsedQuery);
     }
+    public NamedParameterStatement(Connection connection, String query, int setting) throws
+            SQLException {
+        indexMap = new HashMap();
+        String parsedQuery = parse(query, indexMap);
+        statement = connection.prepareStatement(parsedQuery);
+    }
 
     /**
      * Parses a query with named parameters. The parameter-index mappings are

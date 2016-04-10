@@ -21,6 +21,22 @@
         <servlet-name>AjaxAddBtsServlet</servlet-name>
         <url-pattern>/ajax/add-bts</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>AjaxUpdateBtsServlet</servlet-name>
+        <servlet-class>web.gis.AjaxUpdateBtsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AjaxUpdateBtsServlet</servlet-name>
+        <url-pattern>/ajax/update-bts</url-pattern>
+    </servlet-mapping>
+        <servlet>
+        <servlet-name>AjaxDeleteBtsServlet</servlet-name>
+        <servlet-class>web.gis.AjaxDeleteBtsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AjaxDeleteBtsServlet</servlet-name>
+        <url-pattern>/ajax/delete-bts</url-pattern>
+    </servlet-mapping>
     <servlet-mapping>
        <servlet-name>default</servlet-name>
        <url-pattern>/css/*</url-pattern>

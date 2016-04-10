@@ -2,7 +2,7 @@ var KEYCODE = {left: 37, up: 38, right: 39, down: 40, enter: 13, backspace: 8, p
 var markersMap = {};
 var markerArray = [];
 var infoWindows = {};
-var contents = {};
+var contentMap = {};
 var globalInfoWindow = null;
 var map, poly;
 var markerClusterer;
@@ -113,12 +113,16 @@ function initMarkerClusterer() {
                 "      <tr> <th>Đơn vị lắp đặt</th> <td>" + tramBTS.TenDVQL + "</td></tr>  " +
                 "  </tbody>  " +
                 "</table></div>";
-        contents[key] = content;
+        contentMap[key] = content;
 
         google.maps.event.addListener(markersMap[key], 'click', (function (marker, content, infowindow) {
             return function () {
                 if (globalInfoWindow) {
                     globalInfoWindow.close();
+                }
+                if (isEditing) {
+                    showPopupUpdateBTS(marker.tramBTS);
+                    return;
                 }
                 setTimeout(function () {
                     globalInfoWindow = new google.maps.InfoWindow({
@@ -131,7 +135,7 @@ function initMarkerClusterer() {
                     addMarker(marker.getPosition());
                 }
             };
-        })(markersMap[key], contents[key], globalInfoWindow));
+        })(markersMap[key], contentMap[key], globalInfoWindow));
     }
     var clusterStyles = getClusterStyles();
     var mcOptions = {
@@ -182,12 +186,24 @@ function showMarker(MaSo) {
     if (map.getZoom() < detailZoomLevel) {
         map.setZoom(detailZoomLevel);
         setTimeout(function () {
-            map.panTo(markersMap[MaSo].getPosition());
-            google.maps.event.trigger(markersMap[MaSo], 'click');
+            show(MaSo);
         }, 1000)
     } else {
+        show(MaSo);
+//        map.panTo(markersMap[MaSo].getPosition());
+//        google.maps.event.trigger(markersMap[MaSo], 'click');
+    }
+    function show(MaSo) {
         map.panTo(markersMap[MaSo].getPosition());
-        google.maps.event.trigger(markersMap[MaSo], 'click');
+        if (globalInfoWindow) {
+            globalInfoWindow.close();
+        }
+        globalInfoWindow = new google.maps.InfoWindow({
+            content: contentMap[MaSo]
+        });
+        markersMap[MaSo].setMap(map);
+        globalInfoWindow.open(map, markersMap[MaSo]);
+//            google.maps.event.trigger(markersMap[MaSo], 'click');
     }
 }
 function setPan() {

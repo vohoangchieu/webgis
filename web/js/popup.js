@@ -18,7 +18,9 @@ function initDonViQuanLySelect() {
             }));
         }
     });
-     $("#TenDVQL").focus(function() { $(this).select(); } );
+    $("#TenDVQL").focus(function () {
+        $(this).select();
+    });
 }
 function initDonViThueSelect() {
     var availableDonViThue = [];
@@ -40,7 +42,9 @@ function initDonViThueSelect() {
             }));
         }
     });
-    $("#DonViThue").focus(function() { $(this).select(); } );
+    $("#DonViThue").focus(function () {
+        $(this).select();
+    });
 
 }
 function initTinhSelect() {
@@ -85,6 +89,7 @@ function handleEditButtonClick() {
     if ($("#edit span").hasClass("toolactive")) {
         isEditing = false;
         $("#edit span").removeClass("toolactive");
+        map.setOptions({draggableCursor: null});
     } else {
         disableDrawing();
         map.setOptions({draggableCursor: 'crosshair'});
@@ -173,7 +178,26 @@ function showPopupAddBTS(latLng) {
 function hidePopupAddBTS() {
     $("#popup-add-bts").hide();
 }
-
+function showPopupUpdateBTS(tramBTS) {
+    $("#MaSo").val(tramBTS.MaSo);
+    $("#TenTram").val(tramBTS.TenTram);
+    $("#NgayLapDat").val(tramBTS.NgayLapDat);
+    $("#TinhThanhLD").val(tramBTS.TinhThanhLD).change();
+    $("#QuanHuyenLD").val(tramBTS.QuanHuyenLD).change();
+    $("#PhuongXaLD").val(tramBTS.PhuongXaLD);
+    $("#DiaChiLapDat").val(tramBTS.DiaChiLapDat);
+    $("#TrangThai").val(tramBTS.TrangThai);
+    $("#ToaDoKD").val(tramBTS.ToaDoKD);
+    $("#ToaDoVD").val(tramBTS.ToaDoVD);
+    $("#DonViThue").val(tramBTS.DonViThue);
+    $("#TenDVQL").val(tramBTS.TenDVQL);
+    $("#popup-title").text("Cập nhật trạm BTS");
+    $("#btn-add-bts").hide();
+    $("#btn-update-bts").show();
+    $("#btn-delete-bts").show();
+    $("#popup-add-bts").show();
+    $("#TenTram").focus();
+}
 function  handlePopupSubmitAdd() {
     $.ajax({
         type: "post",
@@ -195,20 +219,62 @@ function  handlePopupSubmitAdd() {
     })
             .done(function (resp) {
                 if (resp.returnCode == 1) {
-                    showSuccessMessage(resp.returnMessage);
+                    hidePopupAddBTS();
+                    showPopupMessage("success", resp.returnMessage);
                     var tramBTS = $.parseJSON(resp.data);
                     tramBTSList.push(tramBTS);
                     initMarkerClusterer();
                     setTimeout(function () {
-                        hidePopupAddBTS();
                         showMarker(tramBTS.MaSo);
-//                        window.location = contextPath + "/?x=" + $("#ToaDoVD").val() + "&y=" + $("#ToaDoKD").val();
                     }, 1500)
                 } else {
                     showErrorMessage(resp.returnMessage);
                 }
             })
 }
+
+function  handlePopupSubmitUpdate() {
+    $.ajax({
+        type: "post",
+        url: contextPath + '/ajax/update-bts',
+        data: {
+            MaSo: $("#MaSo").val(),
+            TenTram: $("#TenTram").val(),
+            NgayLapDat: $("#NgayLapDat").val(),
+            TinhThanhLD: $("#TinhThanhLD").val(),
+            QuanHuyenLD: $("#QuanHuyenLD").val(),
+            PhuongXaLD: $("#PhuongXaLD").val(),
+            DiaChiLapDat: $("#DiaChiLapDat").val(),
+            TrangThai: $("#TrangThai").val(),
+            ToaDoKD: $("#ToaDoKD").val(),
+            ToaDoVD: $("#ToaDoVD").val(),
+            DonViThue: $("#DonViThue").val(),
+            TenDVQL: $("#TenDVQL").val(),
+        },
+        dataType: "json"
+    })
+            .done(function (resp) {
+                if (resp.returnCode == 1) {
+                    hidePopupAddBTS();
+                    showPopupMessage("success", resp.returnMessage);
+                    var tramBTS = $.parseJSON(resp.data);
+                    for (var i = 0; i < tramBTSList.length; i++) {
+                        if (tramBTSList[i].MaSo == tramBTS.MaSo) {
+                            tramBTSList[i] = tramBTS;
+                            break;
+                        }
+                    }
+                    initMarkerClusterer();
+                    setTimeout(function () {
+                        showMarker(tramBTS.MaSo);
+                    }, 1500)
+                } else {
+                    showErrorMessage(resp.returnMessage);
+                }
+            })
+}
+
+
 function showSuccessMessage(message) {
     $("#message").removeClass("alert-danger").addClass("alert-success");
     $("#message").text(message).show();
@@ -221,5 +287,42 @@ function hideMessage() {
     $("#message").text("&nbsp;").show();
 }
 
+function showPopupConfirmDeleteTramBTS() {
+    showPopupConfirm("Xác nhận xóa trạm",
+            "Bạn có muốn xóa trạm '" + $("#TenTram").val() + "'",
+            "Hủy",
+            "Đồng ý",
+            handlePopupSubmitDelete);
+    $("#popup-confirm").show();
+}
+function  handlePopupSubmitDelete() {
+    $.ajax({
+        type: "post",
+        url: contextPath + '/ajax/delete-bts',
+        data: {
+            MaSo: $("#MaSo").val(),
+        },
+        dataType: "json"
+    })
+            .done(function (resp) {
+                if (resp.returnCode == 1) {
+                    showPopupMessage("success", resp.returnMessage);
+                    var MaSo = $("#MaSo").val();
+                    for (var i = 0; i < tramBTSList.length; i++) {
+                        var tramBTS = tramBTSList[i];
+                        var key = tramBTS.MaSo;
+                        if (key == MaSo) {
+                            tramBTS.marker.setMap(null);
+                            tramBTSList.splice(i, 1);
+                            break;
+                        }
+                    }
+                    initMarkerClusterer();
+
+                } else {
+                    showPopupMessage("danger", resp.returnMessage);
+                }
+            })
+}
 
 

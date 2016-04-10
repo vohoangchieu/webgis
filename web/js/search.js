@@ -81,7 +81,7 @@ function initDistrictSelect() {
         }
     }
     $('#chonhuyen').html(html);
-//    $('#chonhuyen').select2();
+    $('#chonhuyen').select2();
 }
 function initDonViThueSelect() {
     var html = '<option value="_"></option>';

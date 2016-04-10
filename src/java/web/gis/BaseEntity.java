@@ -6,6 +6,8 @@
 package web.gis;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import web.gis.config.AppConfig;
 
 /**
  *
@@ -13,7 +15,9 @@ import com.google.gson.Gson;
  */
 public class BaseEntity {
     public String toJsonString() {
-        Gson gson = new Gson();
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.setDateFormat(AppConfig.dateFormat);
+        Gson gson = gsonBuilder.create();
         return gson.toJson(this);
     }
 }

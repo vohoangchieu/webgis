@@ -162,7 +162,7 @@ public class DataAccess {
         int row = 0;
         try {
             getConnection();
-            NamedParameterStatement statement = new NamedParameterStatement(conn, sql);
+            NamedParameterStatement statement = new NamedParameterStatement(conn, sql,Statement.RETURN_GENERATED_KEYS);
             statement.setString("TenTram", tramBTSEntity.TenTram);
             statement.setTimestamp("NgayLapDat", new Timestamp(tramBTSEntity.NgayLapDat.getTime()));
             statement.setString("DiaChiLapDat", tramBTSEntity.DiaChiLapDat);
@@ -265,7 +265,58 @@ public class DataAccess {
         }
         return result;
     }
-
+    public int updateTramBTS(TramBTSEntity tramBTSEntity) throws SQLException {
+        int row = -1;
+        try {
+            getConnection();
+            String sql = "update thongtin_trambts "
+                    + "set TenTram=:TenTram,"
+                    + "NgayLapDat=:NgayLapDat,DiaChiLapDat=:DiaChiLapDat, "
+                    + "TinhThanhLD=:TinhThanhLD,QuanHuyenLD=:QuanHuyenLD, "
+                    + "PhuongXaLD=:PhuongXaLD,TrangThai=:TrangThai, "
+                    + "DonViThue=:DonViThue,TenDVQL=:TenDVQL, "
+                    + "ToaDoKD=:ToaDoKD,ToaDoVD=:ToaDoVD "
+                    + "where MaSo=:MaSo";
+            NamedParameterStatement statement = new NamedParameterStatement(conn, sql);
+            statement.setInt("MaSo", tramBTSEntity.MaSo);
+            statement.setString("TenTram", tramBTSEntity.TenTram);
+            statement.setTimestamp("NgayLapDat", new Timestamp(tramBTSEntity.NgayLapDat.getTime()));
+            statement.setString("DiaChiLapDat", tramBTSEntity.DiaChiLapDat);
+            statement.setInt("TinhThanhLD", tramBTSEntity.TinhThanhLD);
+            statement.setInt("QuanHuyenLD", tramBTSEntity.QuanHuyenLD);
+            statement.setInt("PhuongXaLD", tramBTSEntity.PhuongXaLD);
+            statement.setInt("TrangThai", tramBTSEntity.TrangThai);
+            statement.setString("DonViThue", tramBTSEntity.DonViThue);
+            statement.setString("TenDVQL", tramBTSEntity.TenDVQL);
+            statement.setFloat("ToaDoVD", tramBTSEntity.ToaDoVD);
+            statement.setFloat("ToaDoKD", tramBTSEntity.ToaDoKD);
+            logger.info(statement.toString());
+            row = statement.executeUpdate();
+        } catch (ClassNotFoundException cnfex) {
+            logger.error(cnfex.getMessage(), cnfex);
+        } finally {
+//            closeConnection();
+        }
+        return row;
+    }
+    
+    public int deleteTramBTS(int MaSo) throws SQLException {
+        int row = -1;
+        try {
+            getConnection();
+            String sql = "delete from thongtin_trambts "
+                    + "where MaSo=:MaSo";
+            NamedParameterStatement statement = new NamedParameterStatement(conn, sql);
+            statement.setInt("MaSo", MaSo);
+            logger.info(statement.toString());
+            row = statement.executeUpdate();
+        } catch (ClassNotFoundException cnfex) {
+            logger.error(cnfex.getMessage(), cnfex);
+        } finally {
+//            closeConnection();
+        }
+        return row;
+    }
     public int updateLatLng(TramBTSEntity tramBTSEntity) throws SQLException {
         int row = -1;
         try {

@@ -73,3 +73,26 @@ function getDDMMYYYY() {
     dateDDMMYYYY += date.getFullYear();
     return dateDDMMYYYY;
 }
+function showPopupConfirm(confirmTitle, confirmContent, buttonTextCancel, buttonTextOK, callback) {
+    $("#confirm-title").text(confirmTitle);
+    $("#confirm-content").text(confirmContent);
+    $("#btn-confirm-cancel").text(buttonTextCancel);
+    $("#btn-confirm-ok").text(buttonTextOK);
+    $("#btn-confirm-ok").unbind("click");
+    $("#btn-confirm-ok").click(callback);
+}
+function hidePopupConfirm() {
+    $("#popup-confirm").hide();
+}
+function showPopupMessage(type, message, callback) {
+    $("#show-message-content").text(message);
+    $("#btn-confirm-ok").unbind("click");
+    if (callback) {
+        $("#btn-confirm-ok").click(callback);
+    }
+    $("#popup-show-message .panel").attr("class", "panel panel-" + type);
+    $("#popup-show-message").show();
+}
+function hidePopupShowMessage() {
+    $("#popup-show-message").hide();
+}
